@@ -1,0 +1,6 @@
+framework module Pods_ChatHomie {
+  umbrella header "Pods-ChatHomie-umbrella.h"
+
+  export *
+  module * { export * }
+}

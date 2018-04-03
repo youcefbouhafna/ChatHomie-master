@@ -1,0 +1,194 @@
+//
+//  ChatViewController.swift
+//  ChatHomie
+//
+//  Created by youcef bouhafna on 10/21/17.
+//  Copyright © 2017 Youcef. All rights reserved.
+//
+
+import UIKit
+import Firebase
+import FirebaseDatabase
+import FirebaseAuth
+class ChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate {
+    var ids = [String]()
+    var conversation: ConversationsViewController?
+    var textInputContainerView =  MessageInputContainer()
+    var user: User? {
+        didSet {
+            fetchConversationsForUser()
+        }
+    }
+    var messages = [Message]()
+    var flowLayout = UICollectionViewFlowLayout()
+    var collectionView:  UICollectionView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height - 50), collectionViewLayout: flowLayout)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        // fetchConversations()
+        collectionView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
+        //        collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
+        collectionView.alwaysBounceVertical = true
+        collectionView.backgroundColor = .white
+        collectionView.register(ChatLogCollectionViewCell.self, forCellWithReuseIdentifier: "cellID")
+        textInputContainerView = UINib(nibName: "MessageInputContainerView", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! MessageInputContainer
+        textInputContainerView.chatControllerDelegate = self
+        self.view.addSubview(textInputContainerView)
+        self.view.addSubview(collectionView)
+        
+        textInputContainerView.translatesAutoresizingMaskIntoConstraints = false
+        textInputContainerView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 0).isActive = true
+        textInputContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
+        textInputContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
+        textInputContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
+        //  textInputContainerView.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        
+    }
+    
+    //    override var inputAccessoryView: UIView? {
+    //        get {
+    //            return textInputContainerView
+    //        }
+    //    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return messages.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellID", for: indexPath) as! ChatLogCollectionViewCell
+        cell.chatController = self
+        let message = messages[indexPath.item]
+        cell.message = message
+        cell.textView.text = message.text
+        setupCell(message: message, cell: cell)
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.frame.width, height: 80)
+    }
+    
+    func setupCell(message: Message, cell: ChatLogCollectionViewCell) {
+        if let profileImageUrl = self.user?.profileImageUrl {
+            cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
+        }
+        
+        if message.sender == Auth.auth().currentUser?.uid {
+            cell.bubbleView.backgroundColor = ChatLogCollectionViewCell.blueColor
+            cell.textView.textColor = UIColor.white
+            cell.profileImageView.isHidden = true
+            
+            cell.bubbleViewRightAnchor?.isActive = true
+            cell.bubbleViewLeftAnchor?.isActive = false
+        } else {
+            //incoming gray
+            cell.bubbleView.backgroundColor = UIColor(r: 240, g: 240, b: 240)
+            cell.textView.textColor = UIColor.black
+            cell.profileImageView.isHidden = false
+            
+            cell.bubbleViewRightAnchor?.isActive = false
+            cell.bubbleViewLeftAnchor?.isActive = true
+        }
+    }
+    
+    
+    func fetchConversationsForUser() {
+        guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
+            return
+        }
+        
+        let userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(toId)
+        userMessagesRef.observe(.childAdded, with: { (snapshot) in
+            
+            let messageId = snapshot.key
+            let messagesRef = Database.database().reference().child("messages").child(messageId)
+            messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                guard let dictionary = snapshot.value as? [String: AnyObject] else {
+                    return
+                }
+                
+                self.messages.append(Message(dictionary: dictionary)!)
+                DispatchQueue.main.async(execute: {
+                    self.collectionView?.reloadData()
+                    //scroll to the last index
+                    let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
+                    self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+                })
+                
+            }, withCancel: nil)
+            
+        }, withCancel: nil)
+    }
+    
+    func handleSendingMessage() {
+        let jsonDictionary = ["Text": textInputContainerView.inputTextField.text!]
+        createMessageOnSendWith(jsonDictionary as [String : AnyObject])
+    }
+    
+    func createMessageWith(imageUrl: String, image: UIImage) {
+        let messageDictionary = ["ImageUrl": imageUrl, "ImageWidth": image.size.width, "ImageHeight": image.size.height] as [String : Any]
+        createMessageOnSendWith(messageDictionary as [String : AnyObject])
+    }
+    
+    
+    fileprivate func createMessageOnSendWith(_ newDictionary: [String: AnyObject]) {
+        let ref = Database.database().reference().child("messages")
+        let childRef = ref.childByAutoId()
+        let toId = user!.id!
+        let fromId = Auth.auth().currentUser!.uid
+        let timestamp = Int(Date().timeIntervalSince1970)
+        
+        var values: [String: AnyObject] = ["receiver": toId as AnyObject, "sender": fromId as AnyObject, "timestamp": timestamp as AnyObject]
+        
+        //append properties dictionary onto values somehow??
+        //key $0, value $1
+        newDictionary.forEach({values[$0] = $1})
+        
+        childRef.updateChildValues(values) { (error, ref) in
+            if error != nil {
+                print(error!)
+                return
+            }
+            
+            self.textInputContainerView.inputTextField.text = nil
+            
+            let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(toId)
+            
+            let messageId = childRef.key
+            userMessagesRef.updateChildValues([messageId: 1])
+            
+            let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(fromId)
+            recipientUserMessagesRef.updateChildValues([messageId: 1])
+        }
+    }
+    
+    func addUsersUnderConversation() {
+        
+    }
+    
+    func addMessagesUnderConversation() {
+        
+    }
+}
+
+/**
+ . User_Messages
+ .fromId: lksjfsdfjklsf
+ .toID:   ljkslfksfdlsfls
+ 
+ */
+
+enum FirebaseNodes: String {
+    case Users = "Users"
+    case Messages = "Messages"
+    case Conversations = "Conversations"
+    case UserConversations = "UserConversations"
+    case conversationUsers = "ConversationUsers"
+    case conversationMessages = "ConversationMessages"
+    
+}
