@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		540018042077292D0067AA24 /* SwiftMessages+Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540018032077292D0067AA24 /* SwiftMessages+Config.swift */; };
 		541B8FDC1F21BC74000895A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 541B8FDB1F21BC74000895A2 /* AppDelegate.swift */; };
 		541B8FDE1F21BC74000895A2 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 541B8FDD1F21BC74000895A2 /* LoginViewController.swift */; };
 		541B8FE11F21BC74000895A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 541B8FDF1F21BC74000895A2 /* Main.storyboard */; };
@@ -48,6 +49,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		540018032077292D0067AA24 /* SwiftMessages+Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftMessages+Config.swift"; sourceTree = "<group>"; };
 		541B8FD81F21BC73000895A2 /* ChatHomie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatHomie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		541B8FDB1F21BC74000895A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		541B8FDD1F21BC74000895A2 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				541B8FED1F21BF5F000895A2 /* GoogleService-Info.plist */,
 				546DE4CF1F8AD4E4006CD3EC /* Utilities.swift */,
 				542BCCED1F96FE3100889710 /* StatesDataSource.plist */,
+				540018032077292D0067AA24 /* SwiftMessages+Config.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -361,6 +364,7 @@
 				541B8FDC1F21BC74000895A2 /* AppDelegate.swift in Sources */,
 				546DE4CE1F79EFB2006CD3EC /* UserCell.swift in Sources */,
 				547445821FA5709800B692CC /* ConversationCell.swift in Sources */,
+				540018042077292D0067AA24 /* SwiftMessages+Config.swift in Sources */,
 				541C80F61F2B08BC00CCCEAE /* User.swift in Sources */,
 				5474457A1F9ED25B00B692CC /* MessageInputContainer.swift in Sources */,
 				546DE4D71F8ADAE3006CD3EC /* Extensions.swift in Sources */,
@@ -493,11 +497,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 66ED68L38T;
 				INFOPLIST_FILE = ChatHomie/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sunnydaysolution.ChatHomie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -508,11 +513,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 66ED68L38T;
 				INFOPLIST_FILE = ChatHomie/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sunnydaysolution.ChatHomie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

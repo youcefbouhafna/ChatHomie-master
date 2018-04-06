@@ -32,7 +32,7 @@ class ConversationCell: UITableViewCell {
             ref.observe(.value, with: { (snapshot) in
                 if let json = snapshot.value as? [String: AnyObject] {
                     self.userName.text = json["userName"] as? String
-                    self.messageLabel.text = json["text"] as? String
+                    self.messageLabel.text = json["Text"] as? String
                     if let profileImageUrl = json["profileImageUrl"] as? String {
                         self.profileImage.loadImageUsingCacheWithUrlString(profileImageUrl)
                     }

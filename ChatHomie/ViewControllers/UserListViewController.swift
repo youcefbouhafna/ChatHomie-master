@@ -37,11 +37,6 @@ class UserListViewController: UIViewController, UICollectionViewDataSource, UICo
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-    }
-    
     func observeUsers() {
         // reference firebase users database
         
@@ -58,12 +53,7 @@ class UserListViewController: UIViewController, UICollectionViewDataSource, UICo
                         self.collectionView?.reloadData()
                     })
                 }
-                
-                
-                
-                
             }
-            
             
         }, withCancel: nil)
     }

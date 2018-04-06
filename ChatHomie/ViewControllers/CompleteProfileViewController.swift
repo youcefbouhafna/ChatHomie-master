@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import Foundation
+import SwiftMessages
 
-class CompleteProfileViewController: UIViewController, UINavigationBarDelegate, UINavigationControllerDelegate {
+class CompleteProfileViewController: UIViewController, UINavigationBarDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     var StatesList = [String]()
     var imagePicker = UIImagePickerController()
     var profilePhotoHeight: NSLayoutConstraint?
@@ -43,7 +45,6 @@ class CompleteProfileViewController: UIViewController, UINavigationBarDelegate, 
         var sampleImage = UIImageView()
         sampleImage.image = UIImage(named: "uploadPhoto")
         sampleImage.translatesAutoresizingMaskIntoConstraints = false
-        
         return sampleImage
     }()
     
@@ -103,6 +104,7 @@ class CompleteProfileViewController: UIViewController, UINavigationBarDelegate, 
         setupViews()
         loadStatesFromPlist()
         profileImage.tintColor = .red
+        chooseProfilePicGesture()
         
     }
     
@@ -140,6 +142,11 @@ class CompleteProfileViewController: UIViewController, UINavigationBarDelegate, 
         
     }
     
+    func chooseProfilePicGesture() {
+        let profileGestureTap = UITapGestureRecognizer(target: self, action: #selector(addPhotoTapped))
+        profileImage.addGestureRecognizer(profileGestureTap)
+    }
+    
     /// image picker button tapped
     func addPhotoTapped() {
         /**
@@ -151,8 +158,15 @@ class CompleteProfileViewController: UIViewController, UINavigationBarDelegate, 
          /// Enter button logic:
          - onClick will segue users list
          - Save Data to Firebase under the current user node
-         
          */
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
+        let pickImageAction = UIAlertAction(title: "Pick From Library", style: .default, handler: { action in
+            self.presentImagePicker(sourceType: .photoLibrary)})
+        let takeImageAction = UIAlertAction(title: "Take Photo", style: .default, handler: { action in
+            self.presentImagePicker(sourceType: .camera)})
+        
+        alertController.addAction(pickImageAction)
+        alertController.addAction(takeImageAction)
     }
     
     /// Enter Button Action Function to call in button target
@@ -185,6 +199,27 @@ class CompleteProfileViewController: UIViewController, UINavigationBarDelegate, 
             }
         }
     }
+    
+    func presentImagePicker(sourceType: UIImagePickerControllerSourceType) {
+        guard UIImagePickerController.isSourceTypeAvailable(sourceType) else {
+            let message = MessageView.errorMessageView(withTitle: "Error", body: "Source Type not available")
+            SwiftMessages.show(view: message)
+            return
+        }
+        
+        guard let availableMedia = UIImagePickerController.availableMediaTypes(for: sourceType),
+            availableMedia.contains("public.image") else {
+                let message = MessageView.errorMessageView(withTitle: "No Available Images", body: "There are no images available from that source")
+                SwiftMessages.show(view: message)
+                return
+        }
+        
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = sourceType
+        present(imagePickerController, animated: true, completion: nil)
+    }
+
     
     /// set the uplodPhoto icon to the profile image selected
 }

@@ -22,7 +22,8 @@ class ChatViewController: UIViewController, UICollectionViewDataSource, UICollec
     var messages = [Message]()
     var flowLayout = UICollectionViewFlowLayout()
     var collectionView:  UICollectionView!
-    
+    var containerViewBottomAnchor: NSLayoutConstraint?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height - 50), collectionViewLayout: flowLayout)
@@ -44,15 +45,20 @@ class ChatViewController: UIViewController, UICollectionViewDataSource, UICollec
         textInputContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
         textInputContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
         textInputContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
-        //  textInputContainerView.heightAnchor.constraint(equalToConstant: 45).isActive = true
+
+        setupKeyboardObservers()
+    }
+    
+//        override var inputAccessoryView: UIView? {
+//            get {
+//                return textInputContainerView
+//            }
+//        }
+    
+    func bubbleLayout() {
         
     }
     
-    //    override var inputAccessoryView: UIView? {
-    //        get {
-    //            return textInputContainerView
-    //        }
-    //    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return messages.count
@@ -69,7 +75,12 @@ class ChatViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 80)
+        let message = messages[indexPath.item]
+        var bubbleTextMessageHeight: CGFloat = 80
+        if let textMsg = message.text {
+            bubbleTextMessageHeight = estimateFrameForText(textMsg).height + 30
+        }
+        return CGSize(width: view.frame.width, height: bubbleTextMessageHeight)
     }
     
     func setupCell(message: Message, cell: ChatLogCollectionViewCell) {
@@ -167,13 +178,52 @@ class ChatViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
     }
     
-    func addUsersUnderConversation() {
-        
+    fileprivate func estimateFrameForText(_ text: String) -> CGRect {
+        let size = CGSize(width: 200, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 16)], context: nil)
     }
     
-    func addMessagesUnderConversation() {
+    func setupKeyboardObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
+    
+    func handleKeyboardDidShow() {
+        if messages.count > 0 {
+            let indexPath = IndexPath(item: messages.count - 1, section: 0)
+            collectionView?.scrollToItem(at: indexPath, at: .top, animated: true)
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    func handleKeyboardWillShow(_ notification: Notification) {
+        let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue
+        let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
+        
+        containerViewBottomAnchor?.constant = -keyboardFrame!.height
+        UIView.animate(withDuration: keyboardDuration!, animations: {
+            self.view.layoutIfNeeded()
+        })
+    }
+    
+    func handleKeyboardWillHide(_ notification: Notification) {
+        let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
+        
+        containerViewBottomAnchor?.constant = 0
+        UIView.animate(withDuration: keyboardDuration!, animations: {
+            self.view.layoutIfNeeded()
+        })
+    }
+    
 }
 
 /**
