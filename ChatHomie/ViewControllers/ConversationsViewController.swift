@@ -18,10 +18,11 @@ class ConversationsViewController: UITableViewController {
     var messages = [Message]()
     var message: Message?
     var timer: Timer?
-    
     var messagesDictionary =  [String: AnyObject]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Conversations"
         tableView.register(ConversationCell.self, forCellReuseIdentifier: messageCellID)
         getUserMessages()
         

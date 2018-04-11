@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 import FirebaseAuth
+
 class UserListViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout {
     var users: LoginViewController?
     var chatVC =  ChatViewController()
@@ -21,7 +22,7 @@ class UserListViewController: UIViewController, UICollectionViewDataSource, UICo
     var messageId: Message?
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.title = "Users"
         collectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: flowLayout)
         collectionView?.register(UserCell.self, forCellWithReuseIdentifier: cellId)
         collectionView.delegate = self
@@ -33,16 +34,14 @@ class UserListViewController: UIViewController, UICollectionViewDataSource, UICo
         collectionView.backgroundColor = .white
         collectionView.invalidateIntrinsicContentSize()
         observeUsers()
-
         
     }
     
     func observeUsers() {
         // reference firebase users database
-        
         let ref =  Database.database().reference().child("Users")
         // observe users database
-        ref.observe(.childAdded, with: { (snapshot) in
+        ref.observe(.value, with: { (snapshot) in
             // get the json object value as an array of  dictionaries
             if let jsonDictionary = snapshot.value as? [String: AnyObject] {
                 let user = User(withDictionary: jsonDictionary)
@@ -88,8 +87,9 @@ class UserListViewController: UIViewController, UICollectionViewDataSource, UICo
         return cellSize
     }
     
-    /// function to click on user and open chat. segue to ConversationViewController
     var conversationsController: ConversationsViewController?
+    
+    /// function to click on user and open chat. segue to ConversationViewController
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let user = usersList[indexPath.item]
         guard let id = user.id else {return }
@@ -109,7 +109,6 @@ class UserListViewController: UIViewController, UICollectionViewDataSource, UICo
         
     }
     func showChatVC(user: User) {
-        
         let chatLogController = ChatViewController()
         chatLogController.user = user
         navigationController?.pushViewController(chatLogController, animated: true)

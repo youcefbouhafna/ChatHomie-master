@@ -121,6 +121,7 @@ class CompleteProfileViewController: UIViewController, UINavigationBarDelegate, 
         stackViewContainer.addArrangedSubview(EnterButton)
         EnterButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         EnterButton.widthAnchor.constraint(equalTo: stackViewContainer.widthAnchor, constant: -8).isActive = true
+        
         // profile image
         profileImage.widthAnchor.constraint(equalToConstant: 57).isActive = true
         profileImage.heightAnchor.constraint(equalToConstant: 45).isActive = true

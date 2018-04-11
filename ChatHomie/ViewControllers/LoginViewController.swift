@@ -84,7 +84,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         view.configureDropShadow()
                         view.configureContent(title: "Login Success", body: "")
                         SwiftMessages.show(view: view)
-                        let when = DispatchTime.now() + 1.5 // change 2 to desired number of seconds
+                        let when = DispatchTime.now()
                         DispatchQueue.main.asyncAfter(deadline: when) {
                             self.showUserList()
                         }
@@ -432,6 +432,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         let userListController = UserListViewController()
         userListController.users = self
         navigationController?.pushViewController(userListController, animated: true)
+        UIView.animate(withDuration: 0.1, delay: 0.1, options: .curveLinear, animations: {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.window?.makeKeyAndVisible()
+            appDelegate.window?.rootViewController = UINavigationController(rootViewController: MainTabBarController())
+        }) { (success) in
+            print("Animation from Login to TabBarController finished loading successfully")
+        }
+        
     }
     
     func showCompleteProfile() {

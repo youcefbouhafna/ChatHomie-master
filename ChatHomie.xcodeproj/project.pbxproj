@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		540018042077292D0067AA24 /* SwiftMessages+Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540018032077292D0067AA24 /* SwiftMessages+Config.swift */; };
+		540A58EF207DB9BE00CC65F3 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540A58EE207DB9BE00CC65F3 /* MainTabBarController.swift */; };
+		540A58F1207DBA8600CC65F3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540A58F0207DBA8600CC65F3 /* SettingsViewController.swift */; };
 		541B8FDC1F21BC74000895A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 541B8FDB1F21BC74000895A2 /* AppDelegate.swift */; };
 		541B8FDE1F21BC74000895A2 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 541B8FDD1F21BC74000895A2 /* LoginViewController.swift */; };
 		541B8FE11F21BC74000895A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 541B8FDF1F21BC74000895A2 /* Main.storyboard */; };
@@ -50,6 +52,8 @@
 
 /* Begin PBXFileReference section */
 		540018032077292D0067AA24 /* SwiftMessages+Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftMessages+Config.swift"; sourceTree = "<group>"; };
+		540A58EE207DB9BE00CC65F3 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		540A58F0207DBA8600CC65F3 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		541B8FD81F21BC73000895A2 /* ChatHomie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatHomie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		541B8FDB1F21BC74000895A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		541B8FDD1F21BC74000895A2 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -172,6 +176,8 @@
 				542BCCE91F8F084100889710 /* CompleteProfileViewController.swift */,
 				542BCCEF1F9C43F900889710 /* ChatViewController.swift */,
 				5474457F1FA2E01100B692CC /* ConversationsViewController.swift */,
+				540A58EE207DB9BE00CC65F3 /* MainTabBarController.swift */,
+				540A58F0207DBA8600CC65F3 /* SettingsViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -367,7 +373,9 @@
 				540018042077292D0067AA24 /* SwiftMessages+Config.swift in Sources */,
 				541C80F61F2B08BC00CCCEAE /* User.swift in Sources */,
 				5474457A1F9ED25B00B692CC /* MessageInputContainer.swift in Sources */,
+				540A58EF207DB9BE00CC65F3 /* MainTabBarController.swift in Sources */,
 				546DE4D71F8ADAE3006CD3EC /* Extensions.swift in Sources */,
+				540A58F1207DBA8600CC65F3 /* SettingsViewController.swift in Sources */,
 				5474457E1F9EE48900B692CC /* Message.swift in Sources */,
 				542BCCF01F9C43F900889710 /* ChatViewController.swift in Sources */,
 				542BCCEA1F8F084100889710 /* CompleteProfileViewController.swift in Sources */,
