@@ -89,7 +89,7 @@ class UserListViewController: UIViewController, UICollectionViewDataSource, UICo
     
     var conversationsController: ConversationsViewController?
     
-    /// function to click on user and open chat. segue to ConversationViewController
+    //// function to click on user and open chat. segue to ConversationViewController
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let user = usersList[indexPath.item]
         guard let id = user.id else {return }
