@@ -8,6 +8,9 @@
 
 import UIKit
 
+/**
+ Settings class to manage all app settings
+*/
 class SettingsViewController: UIViewController {
 
     override func viewDidLoad() {

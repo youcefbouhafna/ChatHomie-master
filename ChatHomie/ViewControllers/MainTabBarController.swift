@@ -8,6 +8,9 @@
 
 import UIKit
 
+/**
+ App Main TabBar Controller Class
+*/
 let mainTabBar = MainTabBarController()
 class MainTabBarController: UITabBarController {
     let userLists = UserListViewController()
