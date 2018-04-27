@@ -15,7 +15,13 @@ class SettingsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Settings"
         self.view.backgroundColor = .white
     }
+    
+    convenience init() {
+        self.init(nibName: nil, bundle: nil)
+        self.title = "Settings"
+    }
+
+    
 }

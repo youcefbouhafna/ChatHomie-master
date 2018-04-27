@@ -10,7 +10,8 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 import FirebaseAuth
-class ChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate {
+class ChatViewController: UIViewController, UITextFieldDelegate {
+    
     var ids = [String]()
     var conversation: ConversationsViewController?
     var textInputContainerView =  MessageInputContainer()
@@ -23,7 +24,7 @@ class ChatViewController: UIViewController, UICollectionViewDataSource, UICollec
     var flowLayout = UICollectionViewFlowLayout()
     var collectionView:  UICollectionView!
     var containerViewBottomAnchor: NSLayoutConstraint?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height - 50), collectionViewLayout: flowLayout)
@@ -39,26 +40,158 @@ class ChatViewController: UIViewController, UICollectionViewDataSource, UICollec
         textInputContainerView.chatControllerDelegate = self
         self.view.addSubview(textInputContainerView)
         self.view.addSubview(collectionView)
-        
+        hideKeyboard()
         textInputContainerView.translatesAutoresizingMaskIntoConstraints = false
         textInputContainerView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 0).isActive = true
         textInputContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
         textInputContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
         textInputContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
-
+        
         setupKeyboardObservers()
     }
     
-//        override var inputAccessoryView: UIView? {
-//            get {
-//                return textInputContainerView
-//            }
-//        }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        NotificationCenter.default.removeObserver(self)
+    }
     
-    func bubbleLayout() {
+    /// hide keyboard on gesture tap
+    func hideKeyboard() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self,action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tap)
+    }
+    
+    /// dismiss keyboard
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    
+    
+    
+    func fetchConversationsForUser() {
+        guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
+            return
+        }
+        
+        let userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(toId)
+        userMessagesRef.observe(.childAdded, with: { (snapshot) in
+            
+            let messageId = snapshot.key
+            let messagesRef = Database.database().reference().child("messages").child(messageId)
+            messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                guard let dictionary = snapshot.value as? [String: AnyObject] else {
+                    return
+                }
+                
+                self.messages.append(Message(dictionary: dictionary)!)
+                DispatchQueue.main.async(execute: {
+                    self.collectionView?.reloadData()
+                    //scroll to the last index
+                    let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
+                    self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+                })
+                
+            }, withCancel: nil)
+            
+        }, withCancel: nil)
+    }
+    
+    @objc func handleSendingMessage() {
+        let jsonDictionary = ["Text": textInputContainerView.inputTextField.text!]
+        createMessageOnSendWith(jsonDictionary as [String : AnyObject])
+    }
+    
+    func createMessageWith(imageUrl: String, image: UIImage) {
+        let messageDictionary = ["ImageUrl": imageUrl, "ImageWidth": image.size.width, "ImageHeight": image.size.height] as [String : Any]
+        createMessageOnSendWith(messageDictionary as [String : AnyObject])
+    }
+    
+    
+    fileprivate func createMessageOnSendWith(_ newDictionary: [String: AnyObject]) {
+        let ref = Database.database().reference().child("messages")
+        let childRef = ref.childByAutoId()
+        let toId = user!.id!
+        let fromId = Auth.auth().currentUser!.uid
+        let timestamp = Int(Date().timeIntervalSince1970)
+        
+        var values: [String: AnyObject] = ["receiver": toId as AnyObject, "sender": fromId as AnyObject, "timestamp": timestamp as AnyObject]
+        
+        //append properties dictionary onto values somehow??
+        //key $0, value $1
+        newDictionary.forEach({values[$0] = $1})
+        
+        childRef.updateChildValues(values) { (error, ref) in
+            if error != nil {
+                print(error!)
+                return
+            }
+            
+            self.textInputContainerView.inputTextField.text = nil
+            
+            let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(toId)
+            
+            let messageId = childRef.key
+            userMessagesRef.updateChildValues([messageId: 1])
+            
+            let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(fromId)
+            recipientUserMessagesRef.updateChildValues([messageId: 1])
+        }
+    }
+    
+
+    
+    /**
+     Handles keyboard mechanism
+     */
+    func setupKeyboardObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
     }
     
+    /// Handle Keyboard showing
+    @objc func handleKeyboardDidShow() {
+        if messages.count > 0 {
+            let indexPath = IndexPath(item: messages.count - 1, section: 0)
+            collectionView?.scrollToItem(at: indexPath, at: .top, animated: true)
+        }
+    }
+    
+    ///Handles keyboard will show
+    @objc func handleKeyboardWillShow(_ notification: Notification) {
+        let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue
+        let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
+        
+        containerViewBottomAnchor?.constant = -keyboardFrame!.height
+        UIView.animate(withDuration: keyboardDuration!, animations: {
+            self.view.layoutIfNeeded()
+        })
+    }
+    
+    ///Handles keyboard hiding
+    @objc func handleKeyboardWillHide(_ notification: Notification) {
+        let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
+        
+        containerViewBottomAnchor?.constant = 0
+        UIView.animate(withDuration: keyboardDuration!, animations: {
+            self.view.layoutIfNeeded()
+        })
+    }
+    
+    ///Toggle keyboard
+//    func toggleKeyboard() {
+//        textInputContainerView.inputTextField.toggleKeyboardStatus(textInputContainerView.inputTextField)
+//    }
+   
+}
+
+extension ChatViewController:  UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return messages.count
@@ -106,124 +239,11 @@ class ChatViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
     }
     
-    
-    func fetchConversationsForUser() {
-        guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
-            return
-        }
-        
-        let userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(toId)
-        userMessagesRef.observe(.childAdded, with: { (snapshot) in
-            
-            let messageId = snapshot.key
-            let messagesRef = Database.database().reference().child("messages").child(messageId)
-            messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
-                
-                guard let dictionary = snapshot.value as? [String: AnyObject] else {
-                    return
-                }
-                
-                self.messages.append(Message(dictionary: dictionary)!)
-                DispatchQueue.main.async(execute: {
-                    self.collectionView?.reloadData()
-                    //scroll to the last index
-                    let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
-                    self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
-                })
-                
-            }, withCancel: nil)
-            
-        }, withCancel: nil)
-    }
-    
-    func handleSendingMessage() {
-        let jsonDictionary = ["Text": textInputContainerView.inputTextField.text!]
-        createMessageOnSendWith(jsonDictionary as [String : AnyObject])
-    }
-    
-    func createMessageWith(imageUrl: String, image: UIImage) {
-        let messageDictionary = ["ImageUrl": imageUrl, "ImageWidth": image.size.width, "ImageHeight": image.size.height] as [String : Any]
-        createMessageOnSendWith(messageDictionary as [String : AnyObject])
-    }
-    
-    
-    fileprivate func createMessageOnSendWith(_ newDictionary: [String: AnyObject]) {
-        let ref = Database.database().reference().child("messages")
-        let childRef = ref.childByAutoId()
-        let toId = user!.id!
-        let fromId = Auth.auth().currentUser!.uid
-        let timestamp = Int(Date().timeIntervalSince1970)
-        
-        var values: [String: AnyObject] = ["receiver": toId as AnyObject, "sender": fromId as AnyObject, "timestamp": timestamp as AnyObject]
-        
-        //append properties dictionary onto values somehow??
-        //key $0, value $1
-        newDictionary.forEach({values[$0] = $1})
-        
-        childRef.updateChildValues(values) { (error, ref) in
-            if error != nil {
-                print(error!)
-                return
-            }
-            
-            self.textInputContainerView.inputTextField.text = nil
-            
-            let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(toId)
-            
-            let messageId = childRef.key
-            userMessagesRef.updateChildValues([messageId: 1])
-            
-            let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(fromId)
-            recipientUserMessagesRef.updateChildValues([messageId: 1])
-        }
-    }
-    
     fileprivate func estimateFrameForText(_ text: String) -> CGRect {
         let size = CGSize(width: 200, height: 1000)
         let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-        return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 16)], context: nil)
+        return NSString(string: text).boundingRect(with: size, options: options, attributes: [kCTFontAttributeName as NSAttributedStringKey: UIFont.systemFont(ofSize: 16)], context: nil)
     }
-    
-    func setupKeyboardObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-    }
-    
-    func handleKeyboardDidShow() {
-        if messages.count > 0 {
-            let indexPath = IndexPath(item: messages.count - 1, section: 0)
-            collectionView?.scrollToItem(at: indexPath, at: .top, animated: true)
-        }
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    func handleKeyboardWillShow(_ notification: Notification) {
-        let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue
-        let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
-        
-        containerViewBottomAnchor?.constant = -keyboardFrame!.height
-        UIView.animate(withDuration: keyboardDuration!, animations: {
-            self.view.layoutIfNeeded()
-        })
-    }
-    
-    func handleKeyboardWillHide(_ notification: Notification) {
-        let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
-        
-        containerViewBottomAnchor?.constant = 0
-        UIView.animate(withDuration: keyboardDuration!, animations: {
-            self.view.layoutIfNeeded()
-        })
-    }
-    
 }
 
 /**

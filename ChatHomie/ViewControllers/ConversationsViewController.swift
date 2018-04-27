@@ -22,11 +22,17 @@ class ConversationsViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Conversations"
         tableView.register(ConversationCell.self, forCellReuseIdentifier: messageCellID)
         getUserMessages()
         
     }
+    
+    convenience init() {
+        self.init(nibName: nil, bundle: nil)
+        self.title = "Conversations"
+    }
+    
+    
     
     override  func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -68,7 +74,7 @@ class ConversationsViewController: UITableViewController {
         self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
     }
     
-    func handleReload() {
+    @objc func handleReload() {
 //        self.messages.sort(by: { (message1, message2) -> Bool in
 //            
 //            return message1.timeStamp > message2.timeStamp

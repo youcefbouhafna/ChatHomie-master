@@ -23,15 +23,14 @@ class MainTabBarController: UITabBarController {
      Set tab bar items
     */
     func setupTabBarItem() {
-        let usersListVC = UserListViewController()
-        self.tabBar.items?[0].title = "Users"
-        let conversationsVC = ConversationsViewController()
-        self.tabBar.items?[1].title = "Conversations"
-        let settingsVC = SettingsViewController()
-        self.tabBar.items?[2].title = "Settings"
-        
-        let viewControllerList = [ usersListVC, conversationsVC, settingsVC ]
-        setViewControllers(viewControllerList, animated: true)
-        
+            let usersListVC = UserListViewController()
+            let conversationsVC = ConversationsViewController()
+            let settingsVC = SettingsViewController()
+            let viewControllerList = [ usersListVC, conversationsVC, settingsVC ]
+            usersListVC.tabBarItem.image = #imageLiteral(resourceName: "usersIcon")
+            conversationsVC.tabBarItem.image = #imageLiteral(resourceName: "messageIcon")
+            settingsVC.tabBarItem.image = #imageLiteral(resourceName: "settingsIcon")
+            setViewControllers(viewControllerList, animated: true)
+
     }
 }

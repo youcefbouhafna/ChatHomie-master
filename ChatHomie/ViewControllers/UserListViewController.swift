@@ -11,15 +11,17 @@ import Firebase
 import FirebaseDatabase
 import FirebaseAuth
 
-class UserListViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout {
+class UserListViewController: UIViewController {
     var users: LoginViewController?
     var chatVC =  ChatViewController()
+    var conversationsController: ConversationsViewController?
     var usersList = [User]()
     var user: User?
     let cellId = "cellId"
     var collectionView: UICollectionView!
     var flowLayout = UICollectionViewFlowLayout()
     var messageId: Message?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Users"
@@ -37,11 +39,53 @@ class UserListViewController: UIViewController, UICollectionViewDataSource, UICo
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        AddNavigationItems()
+        
+    }
+    
+    /// Setup Tabbar items
+    func setupTabBarItem() {
+        let usersListVC = UserListViewController()
+        tabBarController?.tabBar.items?[0].title = "Users"
+        let conversationsVC = ConversationsViewController()
+        tabBarController?.tabBar.items?[1].title = "Conversations"
+        let settingsVC = SettingsViewController()
+        tabBarController?.tabBar.items?[2].title = "Settings"
+        let viewControllerList = [ usersListVC, conversationsVC, settingsVC ]
+        tabBarController?.setViewControllers(viewControllerList, animated: true)
+        
+    }
+    
+    ///Add Navigation bar button Items
+    func AddNavigationItems() {
+        let logoutButton = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(showLogoutAlert))
+        self.navigationController?.navigationBar.topItem?.setRightBarButton(logoutButton, animated: true)
+    }
+    
+    ///Show logout alert and logout if user clicks on logout button
+    @objc func showLogoutAlert() {
+        let alert = UIAlertController(title: "Logout", message: "Are You Sure You want To Logout?", preferredStyle: .actionSheet)
+        let logoutAction = UIAlertAction(title: "Logout", style: .default) { (action) in
+            try! Auth.auth().signOut()
+            let loginViewController = LoginViewController()
+            self.present(loginViewController, animated: true, completion: nil)
+        }
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(cancel)
+        alert.addAction(logoutAction)
+        present(alert, animated: true, completion: nil)
+        
+    }
+    
+    ///observe all users and show them on the list
     func observeUsers() {
         // reference firebase users database
         let ref =  Database.database().reference().child("Users")
         // observe users database
-        ref.observe(.value, with: { (snapshot) in
+        ref.observe(.childAdded, with: { (snapshot) in
             // get the json object value as an array of  dictionaries
             if let jsonDictionary = snapshot.value as? [String: AnyObject] {
                 let user = User(withDictionary: jsonDictionary)
@@ -57,6 +101,21 @@ class UserListViewController: UIViewController, UICollectionViewDataSource, UICo
         }, withCancel: nil)
     }
     
+    /**
+     Shows the chatViewController
+     - Parameter user: User to pass
+     */
+    func showChatVC(user: User) {
+        let chatLogController = ChatViewController()
+        chatLogController.user = user
+        navigationController?.pushViewController(chatLogController, animated: true)
+        
+    }
+    
+}
+
+//Mark: - UICollectionView DataSource and Delegates
+extension UserListViewController: UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout  {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -78,18 +137,6 @@ class UserListViewController: UIViewController, UICollectionViewDataSource, UICo
         
     }
     
-    func collectionView(_ collectionView: UICollectionView, shouldUpdateFocusIn context: UICollectionViewFocusUpdateContext) -> Bool {
-        return true
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellSize = CGSize(width: view.frame.width, height: 100)
-        return cellSize
-    }
-    
-    var conversationsController: ConversationsViewController?
-    
-    //// function to click on user and open chat. segue to ConversationViewController
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let user = usersList[indexPath.item]
         guard let id = user.id else {return }
@@ -105,14 +152,12 @@ class UserListViewController: UIViewController, UICollectionViewDataSource, UICo
         
     }
     
-    func getUserID() {
-        
-    }
-    func showChatVC(user: User) {
-        let chatLogController = ChatViewController()
-        chatLogController.user = user
-        navigationController?.pushViewController(chatLogController, animated: true)
-        
+    func collectionView(_ collectionView: UICollectionView, shouldUpdateFocusIn context: UICollectionViewFocusUpdateContext) -> Bool {
+        return true
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let cellSize = CGSize(width: view.frame.width, height: 100)
+        return cellSize
+    }
 }

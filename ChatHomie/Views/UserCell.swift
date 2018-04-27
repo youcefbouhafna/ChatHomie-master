@@ -11,13 +11,9 @@ import UIKit
 class UserCell: UICollectionViewCell {
     
     let profileImage: UIImageView = {
-        let image = UIImageView(frame: CGRect(x: 0, y: 0, width: 70, height: 70))
+        let image = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleAspectFill
-//        image.layer.cornerRadius = image.frame.size.height / 2
-//        image.layer.masksToBounds = true
-        //     profileImage.clipsToBounds = true
-
         return image
     }()
     
@@ -39,7 +35,6 @@ class UserCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         profileImage.layer.borderWidth = 1
-       // profileImage.layer.masksToBounds = false
         profileImage.layer.borderColor = UIColor.black.cgColor
         profileImage.layer.cornerRadius = profileImage.frame.height/2
         profileImage.clipsToBounds = true
@@ -48,7 +43,6 @@ class UserCell: UICollectionViewCell {
     func setupUserCell() {
         addSubview(profileImage)
         addSubview(cellUserName)
-       // contentView.translatesAutoresizingMaskIntoConstraints = false
         profileImage.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
         profileImage.rightAnchor.constraint(equalTo: cellUserName.leftAnchor, constant: -20).isActive = true
         profileImage.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
@@ -56,7 +50,6 @@ class UserCell: UICollectionViewCell {
         profileImage.widthAnchor.constraint(equalToConstant: 100).isActive = true
         profileImage.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
-      //  userName.leftAnchor.constraint(equalTo: profileImage.rightAnchor, constant: 8).isActive = true
         cellUserName.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8).isActive = true
         cellUserName.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
         cellUserName.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 8).isActive = true

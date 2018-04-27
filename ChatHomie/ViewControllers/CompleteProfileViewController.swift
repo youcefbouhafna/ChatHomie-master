@@ -17,6 +17,17 @@ class CompleteProfileViewController: UIViewController, UINavigationBarDelegate, 
     var statesPickerHeight: NSLayoutConstraint?
     var profile: LoginViewController?
     
+    /**
+     View that holds the profile image
+ */
+    
+    var profileImage: UIImageView = {
+        var sampleImage = UIImageView()
+        sampleImage.image = UIImage(named: "uploadPhoto")
+        sampleImage.translatesAutoresizingMaskIntoConstraints = false
+        return sampleImage
+    }()
+    
     var EnterButton: UIButton = {
         let button = UIButton()
         button.isUserInteractionEnabled = true
@@ -31,40 +42,6 @@ class CompleteProfileViewController: UIViewController, UINavigationBarDelegate, 
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    var statesPickerView: UIPickerView = {
-        let pickerView = UIPickerView()
-        pickerView.backgroundColor = .clear
-        pickerView.layer.cornerRadius = 6
-        pickerView.layer.borderWidth = 2
-        pickerView.layer.borderColor = UIColor.lightGray.cgColor
-        pickerView.translatesAutoresizingMaskIntoConstraints = false
-        return pickerView
-    }()
-    
-    var profileImage: UIImageView = {
-        var sampleImage = UIImageView()
-        sampleImage.image = UIImage(named: "uploadPhoto")
-        sampleImage.translatesAutoresizingMaskIntoConstraints = false
-        return sampleImage
-    }()
-    
-    var uploadPhotoStackView: UIStackView = {
-        var stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.spacing = 2
-        stackView.distribution = .equalSpacing
-        return stackView
-    }()
-    
-    var pickerViewStackView: UIStackView = {
-        var stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.spacing = 0
-        stackView.distribution = .fill
-        return stackView
-    }()
     
     var stackViewContainer: UIStackView = {
         var stackView = UIStackView()
@@ -76,31 +53,9 @@ class CompleteProfileViewController: UIViewController, UINavigationBarDelegate, 
         return stackView
     }()
     
-    var choosePhotoLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Upload Photo"
-        label.textAlignment = .center
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.textColor = .blue
-        
-        return label
-    }()
-    
-    var selectState: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Select Your State"
-        label.textAlignment = .center
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.textColor = .blue
-        return label
-    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        statesPickerView.delegate = self
-        statesPickerView.dataSource = self
         setupViews()
         loadStatesFromPlist()
         profileImage.tintColor = .red
@@ -110,17 +65,6 @@ class CompleteProfileViewController: UIViewController, UINavigationBarDelegate, 
     
     func setupViews() {
         view.addSubview(stackViewContainer)
-        
-        stackViewContainer.addArrangedSubview(uploadPhotoStackView)
-        stackViewContainer.addArrangedSubview(pickerViewStackView)
-
-        uploadPhotoStackView.addArrangedSubview(choosePhotoLabel)
-        uploadPhotoStackView.addArrangedSubview(profileImage)
-        pickerViewStackView.addArrangedSubview(selectState)
-        pickerViewStackView.addArrangedSubview(statesPickerView)
-        stackViewContainer.addArrangedSubview(EnterButton)
-        EnterButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
-        EnterButton.widthAnchor.constraint(equalTo: stackViewContainer.widthAnchor, constant: -8).isActive = true
         
         // profile image
         profileImage.widthAnchor.constraint(equalToConstant: 57).isActive = true
@@ -132,46 +76,10 @@ class CompleteProfileViewController: UIViewController, UINavigationBarDelegate, 
         stackViewContainer.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
         stackViewContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100).isActive = true
         
-        // picker view
-        statesPickerView.heightAnchor.constraint(equalToConstant: 150).isActive = true
-        
-        // labels
-        choosePhotoLabel.widthAnchor.constraint(equalTo: stackViewContainer.widthAnchor).isActive = true
-        choosePhotoLabel.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        selectState.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        selectState.widthAnchor.constraint(equalTo: choosePhotoLabel.widthAnchor).isActive = true
-        
-    }
-    
-    func chooseProfilePicGesture() {
-        let profileGestureTap = UITapGestureRecognizer(target: self, action: #selector(addPhotoTapped))
-        profileImage.addGestureRecognizer(profileGestureTap)
-    }
-    
-    /// image picker button tapped
-    func addPhotoTapped() {
-        /**
-         - in function
-         - click on picture icon to load imagePicker to choose picture from camera or gallery
-         - create picker for age, state
-         - create button called Enter.
-         
-         /// Enter button logic:
-         - onClick will segue users list
-         - Save Data to Firebase under the current user node
-         */
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
-        let pickImageAction = UIAlertAction(title: "Pick From Library", style: .default, handler: { action in
-            self.presentImagePicker(sourceType: .photoLibrary)})
-        let takeImageAction = UIAlertAction(title: "Take Photo", style: .default, handler: { action in
-            self.presentImagePicker(sourceType: .camera)})
-        
-        alertController.addAction(pickImageAction)
-        alertController.addAction(takeImageAction)
     }
     
     /// Enter Button Action Function to call in button target
-    func enterButtonTapped() {
+    @objc func enterButtonTapped() {
         /**
          - hit enter button
          - ToDo: build the second pickerView column of age and third column of gender

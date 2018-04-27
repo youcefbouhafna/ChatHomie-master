@@ -12,10 +12,15 @@ class MessageInputContainer: UIView, UITextFieldDelegate {
     
     weak var chatControllerDelegate: ChatViewController? {
         didSet {
-            sendButton.addTarget(chatControllerDelegate, action: #selector(ChatViewController.handleSendingMessage), for: .touchUpInside)
-            //            AddImage.addGestureRecognizer(UITapGestureRecognizer(target: chatControllerDelegate, action: #selector(chatControllerDelegate.AddImage)))
+            if !(inputTextField.text?.isEmpty)! {
+                sendButton.addTarget(chatControllerDelegate, action: #selector(ChatViewController.handleSendingMessage), for: .touchUpInside)
+            }
         }
     }
+    //
+    //            //            AddImage.addGestureRecognizer(UITapGestureRecognizer(target: chatControllerDelegate, action: #selector(chatControllerDelegate.AddImage)))
+    //        }
+    
     /**
      UI Components
      */
@@ -41,7 +46,6 @@ class MessageInputContainer: UIView, UITextFieldDelegate {
     override func awakeFromNib() {
         super.awakeFromNib()
         backgroundColor = .white
-        
         addSubview(uploadImageView)
         //x,y,w,h
         uploadImageView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -67,22 +71,32 @@ class MessageInputContainer: UIView, UITextFieldDelegate {
         self.inputTextField.rightAnchor.constraint(equalTo: sendButton.leftAnchor).isActive = true
         self.inputTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-//        let separatorLineView = UIView()
-//        separatorLineView.backgroundColor = UIColor(r: 220, g: 220, b: 220)
-//        separatorLineView.translatesAutoresizingMaskIntoConstraints = false
-//        addSubview(separatorLineView)
+        //        let separatorLineView = UIView()
+        //        separatorLineView.backgroundColor = UIColor(r: 220, g: 220, b: 220)
+        //        separatorLineView.translatesAutoresizingMaskIntoConstraints = false
+        //        addSubview(separatorLineView)
         //x,y,w,h
-//        separatorLineView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-//        separatorLineView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-//        separatorLineView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
-//        separatorLineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        //        separatorLineView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        //        separatorLineView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        //        separatorLineView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+        //        separatorLineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
     }
-  
     
+    
+    ///UITextField delegate method
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        chatControllerDelegate?.handleSendingMessage()
+        if (textField.text?.isEmpty)! {
+            textField.isEnabled = false
+            textField.endEditing(true)
+        } else {
+            textField.isEnabled = true
+            textField.becomeFirstResponder()
+            textField.placeholder = ""
+            chatControllerDelegate?.handleSendingMessage()
+        }
+        
         return true
     }
     
- 
 }
+

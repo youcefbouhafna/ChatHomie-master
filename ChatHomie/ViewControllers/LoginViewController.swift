@@ -13,10 +13,13 @@ import FirebaseAuth
 import Foundation
 import SwiftMessages
 import SVProgressHUD
+import FBSDKLoginKit
+import FacebookLogin
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
     let ref = Database.database().reference()
+    var dict : [String : AnyObject]!
     
     var inputContainerHeight: NSLayoutConstraint?
     var userNameHeightAnchor: NSLayoutConstraint?
@@ -39,15 +42,18 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         setupFacebookLoginButton()
         setupLoginChoiceLabel()
         setupSegmentedControl()
-        
         let authButtonTitle = LoginSegmentedControl.titleForSegment(at: LoginSegmentedControl.selectedSegmentIndex)
         loginButton.setTitle(authButtonTitle, for: .normal)
-        
+        addDevAccounts()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-       
+    }
+    
+    ///add test account navigation bar button item
+    func addDevAccounts() {
+        addNavigationBarButtons()
     }
     
     //Mark: - Login or Create account action
@@ -171,11 +177,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    /// blurview
     var blurView: UIBlurEffect = {
         let blur = UIBlurEffect()
         return blur
     }()
     
+    ///view that holds the credentials text fields
     let inputsContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.white
@@ -185,6 +193,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return view
     }()
     
+    /// Login Button
     var loginButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor(red: 0.773 ,green: 0.882 ,blue: 0.647 ,alpha: 1.00)
@@ -200,6 +209,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
+    /// "Or" label
     var loginChoiceLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -210,6 +220,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return label
     }()
     
+    /// Facebook Button at login view
     var facebookLoginButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -225,7 +236,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
-    
+    /// username textField
     var userNameTextField: UITextField = {
         let userName = UITextField()
         userName.backgroundColor = .white
@@ -235,6 +246,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return userName
     }()
     
+    /// separator view of the username
     let userNameSeparatorView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
@@ -242,7 +254,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return view
     }()
     
-    
+    /// separate view of the email
     let emailSeparatorView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
@@ -250,16 +262,18 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return view
     }()
     
+    /// Email textField
     var emailTextField: UITextField = {
         let email = UITextField()
         email.backgroundColor = .white
         email.placeholder = "Email"
         email.font = UIFont.boldSystemFont(ofSize: 18)
-
+        
         email.translatesAutoresizingMaskIntoConstraints = false
         return email
     }()
     
+    /// PasswordTextField
     var passwordTextField: UITextField = {
         let password = UITextField()
         password.placeholder = "Password"
@@ -269,6 +283,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return password
     }()
     
+    /// Profile Image
     var profileImage: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "youcef")
@@ -282,9 +297,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return imageView
     }()
     
+    /// SegmentedControl to switch between Login and Account Creation
     var LoginSegmentedControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: ["Login", "Register"])
-        sc.selectedSegmentIndex = 1
+        sc.selectedSegmentIndex = 0
         sc.tintColor = .white
         sc.translatesAutoresizingMaskIntoConstraints = false
         sc.addTarget(self, action: #selector(handleLoginOrRegisterButtonTitle), for: .valueChanged)
@@ -292,19 +308,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return sc
     }()
     
-    func handleLoginOrRegisterButtonTitle() {
+    /// Handles showing the views based on whether we are in login or account registration
+    @objc func handleLoginOrRegisterButtonTitle() {
         let authButtonTitle = LoginSegmentedControl.titleForSegment(at: LoginSegmentedControl.selectedSegmentIndex)
         loginButton.setTitle(authButtonTitle, for: .normal)
-        
-//        if LoginSegmentedControl.selectedSegmentIndex == 0 {
-//            inputContainerHeight?.constant = 100
-//           // inputContainerHeight?.isActive = true
-//
-//        } else {
-//            inputContainerHeight?.constant = 150
-//         //   inputContainerHeight?.isActive = true
-//
-//        }
         
         inputContainerHeight?.isActive = false
         inputContainerHeight = inputsContainerView.heightAnchor.constraint(equalToConstant: LoginSegmentedControl.selectedSegmentIndex == 0 ? 100 : 150)
@@ -327,6 +334,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         emailHeightAnchor?.isActive = true
     }
     
+    /// Handles setting up the segmented control layout
     func setupSegmentedControl() {
         LoginSegmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         LoginSegmentedControl.bottomAnchor.constraint(equalTo: inputsContainerView.topAnchor, constant: -20).isActive = true
@@ -334,10 +342,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         LoginSegmentedControl.heightAnchor.constraint(equalToConstant: 30).isActive = true
     }
     
+    /// Setup credentials textfiels views layout
     func setupContainerView() {
-        
         // setup blur view
-        
         inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         inputsContainerView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         inputsContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
@@ -387,8 +394,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    /// Handles settting up profile image layout constraints
     func setupProfileImage() {
-        
         // profile image constraints
         profileImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         profileImage.widthAnchor.constraint(equalToConstant: 100).isActive = true
@@ -396,6 +403,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         profileImage.bottomAnchor.constraint(equalTo: inputsContainerView.topAnchor, constant: -15).isActive = true
     }
     
+    /// Handles setting up login button layout contraints
     func setupLoginButton() {
         loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         // loginButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 200)
@@ -404,6 +412,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         loginButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
+    /// Handle setting up the "Or" label contraints label
     func setupLoginChoiceLabel() {
         loginChoiceLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         loginChoiceLabel.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 12).isActive = true
@@ -411,6 +420,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         loginChoiceLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
     }
+    
+    /// Handles setting up facebook login button layout constraints
     func setupFacebookLoginButton() {
         facebookLoginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         facebookLoginButton.topAnchor.constraint(equalTo: loginChoiceLabel.bottomAnchor, constant: 12).isActive = true
@@ -419,6 +430,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    // Mark: - UITextFields Delegate Methods
     override func resignFirstResponder() -> Bool {
         passwordTextField.resignFirstResponder()
         return true
@@ -428,33 +440,61 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         self.view.endEditing(true)
     }
     
+    /// Handles showing the list of users
     func showUserList() {
         let userListController = UserListViewController()
         userListController.users = self
         navigationController?.pushViewController(userListController, animated: true)
-        UIView.animate(withDuration: 0.1, delay: 0.1, options: .curveLinear, animations: {
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            appDelegate.window?.makeKeyAndVisible()
-            appDelegate.window?.rootViewController = UINavigationController(rootViewController: MainTabBarController())
-        }) { (success) in
-            print("Animation from Login to TabBarController finished loading successfully")
-        }
+        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.window?.makeKeyAndVisible()
+        appDelegate.window?.rootViewController = UINavigationController(rootViewController: MainTabBarController())
+        
         
     }
     
+    /// Handles showing the complete your profile page
     func showCompleteProfile() {
         let completeProfileController = CompleteProfileViewController()
         completeProfileController.profile = self
-        //  navigationController?.present(completeProfileController, animated: true, completion: nil)
-        navigationController?.pushViewController(completeProfileController, animated: true)
+        self.navigationController?.pushViewController(completeProfileController, animated: true)
     }
     
-    func customizeLoginButton() {
+    /// Toggle Login button
+    func toggleLoginButton() {
         if (!(emailTextField.text?.isEmpty)!) || (!(passwordTextField.text?.isEmpty)!) || (!(userNameTextField.text?.isEmpty)!) {
             loginButton.isEnabled = true
             
         } else {
             loginButton.isEnabled = false
+        }
+    }
+    
+    /// Login button action
+    @objc func loginButtonClicked() {
+        let loginManager = LoginManager()
+        loginManager.logIn(readPermissions: [.publicProfile], viewController: self) { loginResult in
+            switch loginResult {
+            case .failed(let error):
+                print(error)
+            case .cancelled:
+                print("User cancelled login.")
+            case .success(let grantedPermissions, let declinedPermissions, let accessToken):
+                self.getFBUserData()
+            }
+        }
+    }
+    
+    /// Fetches user data from facebook
+    func getFBUserData() {
+        if((FBSDKAccessToken.current()) != nil){
+            FBSDKGraphRequest(graphPath: "me", parameters: ["fields": "id, name, picture.type(large), email"]).start(completionHandler: { (connection, result, error) -> Void in
+                if (error == nil){
+                    self.dict = result as! [String : AnyObject]
+                    print(result!)
+                    print(self.dict)
+                }
+            })
         }
     }
     
@@ -467,30 +507,5 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
 }
 
-extension UIView {
-    func addBlurEffect() {
-        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.regular)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = self.bounds
-        
-        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight] // for supporting device rotation
-        self.addSubview(blurEffectView)
-    }
-    
-    func addBackGroundImageBlurEffect() {
-        let backgroundImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
-        let image = UIImage(named: "youcef")
-        backgroundImageView.image = image
-        self.addSubview(backgroundImageView)
-        self.addBlurEffect()
-    }
-    
-    
-}
 
-extension UIColor {
-    convenience init(r: CGFloat, g: CGFloat, b: CGFloat) {
-        self.init(red: r/255, green: g/255, blue: b/255, alpha: 1)
-    }
-}
 
