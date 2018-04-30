@@ -11,7 +11,7 @@ import UIKit
 class UserCell: UICollectionViewCell {
     
     let profileImage: UIImageView = {
-        let image = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleAspectFill
         return image
@@ -38,6 +38,7 @@ class UserCell: UICollectionViewCell {
         profileImage.layer.borderColor = UIColor.black.cgColor
         profileImage.layer.cornerRadius = profileImage.frame.height/2
         profileImage.clipsToBounds = true
+        profileImage.layer.masksToBounds = true
     }
    
     func setupUserCell() {

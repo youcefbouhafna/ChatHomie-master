@@ -113,7 +113,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     fileprivate func createMessageOnSendWith(_ newDictionary: [String: AnyObject]) {
         let ref = Database.database().reference().child("messages")
         let childRef = ref.childByAutoId()
-        let toId = user!.id!
+        let toId = user!.id
         let fromId = Auth.auth().currentUser!.uid
         let timestamp = Int(Date().timeIntervalSince1970)
         

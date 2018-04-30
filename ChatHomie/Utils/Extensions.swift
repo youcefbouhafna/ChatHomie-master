@@ -110,28 +110,28 @@ extension LoginViewController {
     }
     
     func addNavigationBarButtons() {
-        let loginTestAccount = UIBarButtonItem(title: "testLogin", style: .plain, target: self, action: #selector(showAccounts(_:)))
+    //    let loginTestAccount = UIBarButtonItem(title: "testLogin", style: .plain, target: self, action: #selector(showAccounts(_:)))
        // self.navigationItem.leftBarButtonItems = [loginTestAccount]
-        self.navigationController?.navigationBar.topItem?.setLeftBarButton(loginTestAccount, animated: true)
+      //  self.navigationController?.navigationBar.topItem?.setLeftBarButton(loginTestAccount, animated: true)
     
     }
-    
-    @objc func showAccounts(_ sender: UIBarButtonItem) {
-        let alert = UIAlertController(title: "Login As", message: nil, preferredStyle: .actionSheet)
-        for account in accounts {
-            let credentialAction = UIAlertAction(title: account.email, style: .default) { (action) in
-                self.emailTextField.text = account.email
-                self.passwordTextField.text = account.password
-            }
-            
-            alert.addAction(credentialAction)
-        }
-        
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        alert.addAction(cancel)
-        present(alert, animated: true, completion: nil)
-
-    }
+//
+//    @objc func showAccounts(_ sender: UIBarButtonItem) {
+//        let alert = UIAlertController(title: "Login As", message: nil, preferredStyle: .actionSheet)
+//        for account in accounts {
+//            let credentialAction = UIAlertAction(title: account.email, style: .default) { (action) in
+//                self.emailTextField.text = account.email
+//                self.passwordTextField.text = account.password
+//            }
+//
+//            alert.addAction(credentialAction)
+//        }
+//
+//        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+//        alert.addAction(cancel)
+//        present(alert, animated: true, completion: nil)
+//
+//    }
     
     
 }

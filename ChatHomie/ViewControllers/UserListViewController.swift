@@ -35,15 +35,17 @@ class UserListViewController: UIViewController {
         self.view.addSubview(collectionView)
         collectionView.backgroundColor = .white
         collectionView.invalidateIntrinsicContentSize()
-        observeUsers()
+        
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         AddNavigationItems()
-        
+        observeUsers()
     }
+    
+    
     
     /// Setup Tabbar items
     func setupTabBarItem() {
@@ -128,18 +130,15 @@ extension UserListViewController: UICollectionViewDataSource, UICollectionViewDe
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! UserCell
         let user = usersList[indexPath.item]
         cell.cellUserName.text = user.userName
-        if let profileImage = user.profileImageUrl {
-            cell.profileImage.loadImageUsingCacheWithUrlString(profileImage)
-        } else {
-            //       cell.profileImage.image =
-        }
+        cell.profileImage.loadImageUsingCacheWithUrlString(user.profileImageUrl)
+       
         return cell
         
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let user = usersList[indexPath.item]
-        guard let id = user.id else {return }
+        let id = user.id 
         let ref = Database.database().reference().child("Users").child(id)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             print(snapshot)
