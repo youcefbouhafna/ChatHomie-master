@@ -35,14 +35,14 @@ class UserListViewController: UIViewController {
         self.view.addSubview(collectionView)
         collectionView.backgroundColor = .white
         collectionView.invalidateIntrinsicContentSize()
-        
+        AddNavigationItems()
+        observeUsers()
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        AddNavigationItems()
-        observeUsers()
+       
     }
     
     

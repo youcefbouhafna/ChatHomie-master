@@ -27,4 +27,5 @@ pod 'FacebookShare'
 pod 'RealmSwift'
 pod 'ViewAnimator'
 pod 'BulletinBoard'
+pod 'FOView'
 end

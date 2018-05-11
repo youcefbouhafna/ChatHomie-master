@@ -116,11 +116,11 @@
 		541B8FCF1F21BC73000895A2 = {
 			isa = PBXGroup;
 			children = (
-				5403C0192083160500079F11 /* realm-swift-3.3.2 */,
 				541B8FDA1F21BC73000895A2 /* ChatHomie */,
 				541B8FD91F21BC73000895A2 /* Products */,
 				4A41126920263F9484921E9D /* Pods */,
 				51DAC37FBC802390BD9283C6 /* Frameworks */,
+				5403C0192083160500079F11 /* realm-swift-3.3.2 */,
 			);
 			sourceTree = "<group>";
 		};
@@ -173,7 +173,7 @@
 		546DE4D31F8AD520006CD3EC /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				541B8FDD1F21BC74000895A2 /* LoginViewController.swift */,
+				54D6231320997E8D00C3C7BE /* Authentication+WalkThrough */,
 				541C235F1F70D71300DEA96F /* UserListViewController.swift */,
 				542BCCE91F8F084100889710 /* CompleteProfileViewController.swift */,
 				542BCCEF1F9C43F900889710 /* ChatViewController.swift */,
@@ -202,6 +202,14 @@
 				549648C41FAFF42F00040F72 /* MessageInputContainerView.xib */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		54D6231320997E8D00C3C7BE /* Authentication+WalkThrough */ = {
+			isa = PBXGroup;
+			children = (
+				541B8FDD1F21BC74000895A2 /* LoginViewController.swift */,
+			);
+			path = "Authentication+WalkThrough";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -312,6 +320,7 @@
 				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSDKShareKit/FBSDKShareKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FOView/FOView.framework",
 				"${BUILT_PRODUCTS_DIR}/FacebookCore/FacebookCore.framework",
 				"${BUILT_PRODUCTS_DIR}/FacebookLogin/FacebookLogin.framework",
 				"${BUILT_PRODUCTS_DIR}/FacebookShare/FacebookShare.framework",
@@ -337,6 +346,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKShareKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FOView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookCore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookLogin.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookShare.framework",
