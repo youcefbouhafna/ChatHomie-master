@@ -10,13 +10,7 @@ import UIKit
 
 class MessageInputContainer: UIView, UITextFieldDelegate {
     
-    weak var chatControllerDelegate: ChatViewController? {
-        didSet {
-            if !(inputTextField.text?.isEmpty)! {
-                sendButton.addTarget(chatControllerDelegate, action: #selector(ChatViewController.handleSendingMessage), for: .touchUpInside)
-            }
-        }
-    }
+    weak var chatControllerDelegate: ChatViewController?
     //
     //            //            AddImage.addGestureRecognizer(UITapGestureRecognizer(target: chatControllerDelegate, action: #selector(chatControllerDelegate.AddImage)))
     //        }
@@ -26,7 +20,7 @@ class MessageInputContainer: UIView, UITextFieldDelegate {
      */
     lazy var inputTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Enter message..."
+        textField.placeholder = "Enter Message..."
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.delegate = self
         return textField
@@ -40,7 +34,14 @@ class MessageInputContainer: UIView, UITextFieldDelegate {
         return uploadImageView
     }()
     
-    let sendButton = UIButton(type: .system)
+    lazy var sendButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Send", for: UIControlState())
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isUserInteractionEnabled = true
+        return button
+    }()
+
     
     
     override func awakeFromNib() {
@@ -54,9 +55,7 @@ class MessageInputContainer: UIView, UITextFieldDelegate {
         uploadImageView.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         
-        sendButton.setTitle("Send", for: UIControlState())
-        sendButton.translatesAutoresizingMaskIntoConstraints = false
-        sendButton.isUserInteractionEnabled = true
+        
         self.addSubview(sendButton)
         //x,y,w,h
         sendButton.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -91,7 +90,7 @@ class MessageInputContainer: UIView, UITextFieldDelegate {
         } else {
             textField.isEnabled = true
             textField.becomeFirstResponder()
-            textField.placeholder = ""
+            textField.placeholder = "Enter Message..."
             chatControllerDelegate?.handleSendingMessage()
         }
         

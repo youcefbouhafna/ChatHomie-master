@@ -23,7 +23,7 @@ class LoginViewController: UIViewController, UIScrollViewDelegate {
     var currentUser: User?
     var timer: Timer?
     var frame: CGRect = CGRect(x:0, y:0, width:0, height:0)
-    var walkThroughImages:[UIImage] = [#imageLiteral(resourceName: "walkThrough01"), #imageLiteral(resourceName: "walkThrough02"), #imageLiteral(resourceName: "youcef")]
+    var walkThroughImages:[UIImage] = [#imageLiteral(resourceName: "onBoarding2"), #imageLiteral(resourceName: "onBoarding3"), #imageLiteral(resourceName: "onBoarding1")]
     
     var pageController = UIPageViewController()
     var pages = [UIView]()
@@ -144,7 +144,6 @@ class LoginViewController: UIViewController, UIScrollViewDelegate {
         appDelegate.window?.makeKeyAndVisible()
         appDelegate.window?.rootViewController = UINavigationController(rootViewController: MainTabBarController())
         
-        
     }
     
     /// Handles showing the complete your profile page
@@ -161,6 +160,7 @@ class LoginViewController: UIViewController, UIScrollViewDelegate {
      - Parameter sender: UIButton as a sender
      */
     @objc func loginWithFacebook(sender: UIButton) {
+        timer?.invalidate()
         let loginManager = LoginManager()
         loginManager.logOut()
         loginManager.logIn(readPermissions: [.publicProfile], viewController: self) { loginResult in

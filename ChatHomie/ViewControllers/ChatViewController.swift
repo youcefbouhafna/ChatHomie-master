@@ -217,17 +217,20 @@ extension ChatViewController:  UICollectionViewDataSource, UICollectionViewDeleg
     }
     
     func setupCell(message: Message, cell: ChatLogCollectionViewCell) {
-        if let profileImageUrl = self.user?.profileImageUrl {
-            cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
-        }
+        
         
         if message.sender == Auth.auth().currentUser?.uid {
             cell.bubbleView.backgroundColor = ChatLogCollectionViewCell.blueColor
             cell.textView.textColor = UIColor.white
-            cell.profileImageView.isHidden = true
+            cell.profileImageView.isHidden = false
+            cell.profileImageLeftAnchor?.isActive = false
+            cell.profileImageRightAnchor?.isActive = true
             
             cell.bubbleViewRightAnchor?.isActive = true
             cell.bubbleViewLeftAnchor?.isActive = false
+            if let profileImageUrl = self.user?.profileImageUrl {
+                cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
+            }
         } else {
             //incoming gray
             cell.bubbleView.backgroundColor = UIColor(r: 240, g: 240, b: 240)
@@ -236,6 +239,10 @@ extension ChatViewController:  UICollectionViewDataSource, UICollectionViewDeleg
             
             cell.bubbleViewRightAnchor?.isActive = false
             cell.bubbleViewLeftAnchor?.isActive = true
+            if let profileImageUrl = self.user?.profileImageUrl {
+                cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
+            }
+
         }
     }
     
