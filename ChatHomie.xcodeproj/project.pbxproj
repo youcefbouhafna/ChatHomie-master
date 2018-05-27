@@ -10,6 +10,15 @@
 		540018042077292D0067AA24 /* SwiftMessages+Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540018032077292D0067AA24 /* SwiftMessages+Config.swift */; };
 		540A58EF207DB9BE00CC65F3 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540A58EE207DB9BE00CC65F3 /* MainTabBarController.swift */; };
 		540A58F1207DBA8600CC65F3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540A58F0207DBA8600CC65F3 /* SettingsViewController.swift */; };
+		540C98CF20AA03170044BBC9 /* UserRealmDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540C98CE20AA03170044BBC9 /* UserRealmDB.swift */; };
+		540C98D120AA032A0044BBC9 /* MessageRealmDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540C98D020AA032A0044BBC9 /* MessageRealmDB.swift */; };
+		540C98D420AA443E0044BBC9 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540C98D320AA443E0044BBC9 /* SettingsModel.swift */; };
+		540C98D720AA5D0B0044BBC9 /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540C98D620AA5D0B0044BBC9 /* SettingsTableViewCell.swift */; };
+		540C98D920AF083B0044BBC9 /* PrivacyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540C98D820AF083B0044BBC9 /* PrivacyViewController.swift */; };
+		540C98DB20AF085D0044BBC9 /* ProfileSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540C98DA20AF085D0044BBC9 /* ProfileSettingsViewController.swift */; };
+		540C98DD20AF087F0044BBC9 /* DonateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540C98DC20AF087F0044BBC9 /* DonateViewController.swift */; };
+		540C98DF20AF17B30044BBC9 /* Navigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540C98DE20AF17B30044BBC9 /* Navigator.swift */; };
+		5417D63920B630DE0048FB69 /* FirebaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5417D63820B630DE0048FB69 /* FirebaseController.swift */; };
 		541B8FDC1F21BC74000895A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 541B8FDB1F21BC74000895A2 /* AppDelegate.swift */; };
 		541B8FDE1F21BC74000895A2 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 541B8FDD1F21BC74000895A2 /* LoginViewController.swift */; };
 		541B8FE11F21BC74000895A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 541B8FDF1F21BC74000895A2 /* Main.storyboard */; };
@@ -55,6 +64,15 @@
 		5403C0192083160500079F11 /* realm-swift-3.3.2 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "realm-swift-3.3.2"; sourceTree = "<group>"; };
 		540A58EE207DB9BE00CC65F3 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		540A58F0207DBA8600CC65F3 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		540C98CE20AA03170044BBC9 /* UserRealmDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRealmDB.swift; sourceTree = "<group>"; };
+		540C98D020AA032A0044BBC9 /* MessageRealmDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRealmDB.swift; sourceTree = "<group>"; };
+		540C98D320AA443E0044BBC9 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
+		540C98D620AA5D0B0044BBC9 /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
+		540C98D820AF083B0044BBC9 /* PrivacyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyViewController.swift; sourceTree = "<group>"; };
+		540C98DA20AF085D0044BBC9 /* ProfileSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettingsViewController.swift; sourceTree = "<group>"; };
+		540C98DC20AF087F0044BBC9 /* DonateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonateViewController.swift; sourceTree = "<group>"; };
+		540C98DE20AF17B30044BBC9 /* Navigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigator.swift; sourceTree = "<group>"; };
+		5417D63820B630DE0048FB69 /* FirebaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseController.swift; sourceTree = "<group>"; };
 		541B8FD81F21BC73000895A2 /* ChatHomie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatHomie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		541B8FDB1F21BC74000895A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		541B8FDD1F21BC74000895A2 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -113,6 +131,35 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		540C98D220AA03310044BBC9 /* RealmDB */ = {
+			isa = PBXGroup;
+			children = (
+				540C98CE20AA03170044BBC9 /* UserRealmDB.swift */,
+				540C98D020AA032A0044BBC9 /* MessageRealmDB.swift */,
+			);
+			path = RealmDB;
+			sourceTree = "<group>";
+		};
+		540C98D520AA44440044BBC9 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				540A58F0207DBA8600CC65F3 /* SettingsViewController.swift */,
+				540C98D320AA443E0044BBC9 /* SettingsModel.swift */,
+				540C98D820AF083B0044BBC9 /* PrivacyViewController.swift */,
+				540C98DA20AF085D0044BBC9 /* ProfileSettingsViewController.swift */,
+				540C98DC20AF087F0044BBC9 /* DonateViewController.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		540C98E020AF7F060044BBC9 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				540C98D620AA5D0B0044BBC9 /* SettingsTableViewCell.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		541B8FCF1F21BC73000895A2 = {
 			isa = PBXGroup;
 			children = (
@@ -156,6 +203,8 @@
 				546DE4CF1F8AD4E4006CD3EC /* Utilities.swift */,
 				542BCCED1F96FE3100889710 /* StatesDataSource.plist */,
 				540018032077292D0067AA24 /* SwiftMessages+Config.swift */,
+				540C98DE20AF17B30044BBC9 /* Navigator.swift */,
+				5417D63820B630DE0048FB69 /* FirebaseController.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -163,9 +212,9 @@
 		546DE4D21F8AD507006CD3EC /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				546DE4D41F8AD52F006CD3EC /* RealmDB */,
 				541C80F51F2B08BC00CCCEAE /* User.swift */,
 				5474457D1F9EE48900B692CC /* Message.swift */,
+				540C98D220AA03310044BBC9 /* RealmDB */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -174,21 +223,14 @@
 			isa = PBXGroup;
 			children = (
 				54D6231320997E8D00C3C7BE /* Authentication+WalkThrough */,
+				540C98D520AA44440044BBC9 /* Settings */,
+				542BCCEF1F9C43F900889710 /* ChatViewController.swift */,
 				541C235F1F70D71300DEA96F /* UserListViewController.swift */,
 				542BCCE91F8F084100889710 /* CompleteProfileViewController.swift */,
-				542BCCEF1F9C43F900889710 /* ChatViewController.swift */,
 				5474457F1FA2E01100B692CC /* ConversationsViewController.swift */,
 				540A58EE207DB9BE00CC65F3 /* MainTabBarController.swift */,
-				540A58F0207DBA8600CC65F3 /* SettingsViewController.swift */,
 			);
 			path = ViewControllers;
-			sourceTree = "<group>";
-		};
-		546DE4D41F8AD52F006CD3EC /* RealmDB */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = RealmDB;
 			sourceTree = "<group>";
 		};
 		546DE4D51F8AD593006CD3EC /* Views */ = {
@@ -200,6 +242,7 @@
 				5474457B1F9EE28B00B692CC /* ChatLogCollectionViewCell.swift */,
 				547445811FA5709800B692CC /* ConversationCell.swift */,
 				549648C41FAFF42F00040F72 /* MessageInputContainerView.xib */,
+				540C98E020AF7F060044BBC9 /* Settings */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -399,20 +442,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				540C98CF20AA03170044BBC9 /* UserRealmDB.swift in Sources */,
 				546DE4D01F8AD4E4006CD3EC /* Utilities.swift in Sources */,
 				5474457C1F9EE28B00B692CC /* ChatLogCollectionViewCell.swift in Sources */,
 				541B8FDE1F21BC74000895A2 /* LoginViewController.swift in Sources */,
 				541C23601F70D71300DEA96F /* UserListViewController.swift in Sources */,
 				541B8FDC1F21BC74000895A2 /* AppDelegate.swift in Sources */,
+				540C98DF20AF17B30044BBC9 /* Navigator.swift in Sources */,
 				546DE4CE1F79EFB2006CD3EC /* UserCell.swift in Sources */,
+				540C98DD20AF087F0044BBC9 /* DonateViewController.swift in Sources */,
 				547445821FA5709800B692CC /* ConversationCell.swift in Sources */,
+				540C98D120AA032A0044BBC9 /* MessageRealmDB.swift in Sources */,
+				540C98DB20AF085D0044BBC9 /* ProfileSettingsViewController.swift in Sources */,
+				5417D63920B630DE0048FB69 /* FirebaseController.swift in Sources */,
 				540018042077292D0067AA24 /* SwiftMessages+Config.swift in Sources */,
 				541C80F61F2B08BC00CCCEAE /* User.swift in Sources */,
+				540C98D920AF083B0044BBC9 /* PrivacyViewController.swift in Sources */,
+				540C98D720AA5D0B0044BBC9 /* SettingsTableViewCell.swift in Sources */,
 				5474457A1F9ED25B00B692CC /* MessageInputContainer.swift in Sources */,
 				540A58EF207DB9BE00CC65F3 /* MainTabBarController.swift in Sources */,
 				546DE4D71F8ADAE3006CD3EC /* Extensions.swift in Sources */,
 				540A58F1207DBA8600CC65F3 /* SettingsViewController.swift in Sources */,
 				5474457E1F9EE48900B692CC /* Message.swift in Sources */,
+				540C98D420AA443E0044BBC9 /* SettingsModel.swift in Sources */,
 				542BCCF01F9C43F900889710 /* ChatViewController.swift in Sources */,
 				542BCCEA1F8F084100889710 /* CompleteProfileViewController.swift in Sources */,
 				547445801FA2E01100B692CC /* ConversationsViewController.swift in Sources */,

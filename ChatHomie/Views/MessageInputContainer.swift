@@ -10,7 +10,8 @@ import UIKit
 
 class MessageInputContainer: UIView, UITextFieldDelegate {
     
-    weak var chatControllerDelegate: ChatViewController?
+    var chatVC: ChatViewController?
+    weak var delegate: SendingMessageDelegate?
     //
     //            //            AddImage.addGestureRecognizer(UITapGestureRecognizer(target: chatControllerDelegate, action: #selector(chatControllerDelegate.AddImage)))
     //        }
@@ -39,11 +40,24 @@ class MessageInputContainer: UIView, UITextFieldDelegate {
         button.setTitle("Send", for: UIControlState())
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isUserInteractionEnabled = true
+        button.setTitleColor(.blue, for: .normal)
+        button.addTarget(self, action: #selector(sendMessageOnButtonClick(sender:)), for: .touchUpInside)
         return button
     }()
-
     
     
+    @objc func sendMessageOnButtonClick(sender: UIButton) {
+        if (inputTextField.text?.isEmpty)! {
+            inputTextField.isEnabled = false
+            inputTextField.endEditing(true)
+        } else {
+            inputTextField.isEnabled = true
+            inputTextField.becomeFirstResponder()
+            inputTextField.placeholder = "Enter Message..."
+            delegate?.sendMessage(chatController: chatVC!)
+            
+        }
+    }
     override func awakeFromNib() {
         super.awakeFromNib()
         backgroundColor = .white
@@ -70,15 +84,6 @@ class MessageInputContainer: UIView, UITextFieldDelegate {
         self.inputTextField.rightAnchor.constraint(equalTo: sendButton.leftAnchor).isActive = true
         self.inputTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-        //        let separatorLineView = UIView()
-        //        separatorLineView.backgroundColor = UIColor(r: 220, g: 220, b: 220)
-        //        separatorLineView.translatesAutoresizingMaskIntoConstraints = false
-        //        addSubview(separatorLineView)
-        //x,y,w,h
-        //        separatorLineView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        //        separatorLineView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        //        separatorLineView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
-        //        separatorLineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
     }
     
     
@@ -91,7 +96,8 @@ class MessageInputContainer: UIView, UITextFieldDelegate {
             textField.isEnabled = true
             textField.becomeFirstResponder()
             textField.placeholder = "Enter Message..."
-            chatControllerDelegate?.handleSendingMessage()
+            delegate?.sendMessage(chatController: chatVC!)
+            
         }
         
         return true
@@ -99,3 +105,12 @@ class MessageInputContainer: UIView, UITextFieldDelegate {
     
 }
 
+protocol SendingMessageDelegate: class {
+    func sendMessage(chatController: ChatViewController)
+}
+
+extension SendingMessageDelegate {
+    func sendMessage(chatController: ChatViewController) {
+        chatController.handleSendingMessage()
+    }
+}

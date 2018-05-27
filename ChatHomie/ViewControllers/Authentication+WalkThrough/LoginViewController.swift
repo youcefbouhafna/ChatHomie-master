@@ -66,10 +66,11 @@ class LoginViewController: UIViewController, UIScrollViewDelegate {
      */
     func configurePageControl() {
         // pageControl
-        pageControl.frame = CGRect()
         pageControl.currentPageIndicatorTintColor = UIColor.black
         pageControl.pageIndicatorTintColor = UIColor.lightGray
+        pageControl.addTarget(self, action: #selector(changePage(sender:)), for: .valueChanged)
         pageControl.numberOfPages = self.walkThroughImages.count
+        
         self.view.addSubview(self.pageControl)
         
         pageControl.translatesAutoresizingMaskIntoConstraints = false
@@ -120,6 +121,7 @@ class LoginViewController: UIViewController, UIScrollViewDelegate {
         let pageNumber = round((scrollView.contentOffset.x) / scrollView.frame.size.width)
         pageControl.currentPage = Int(pageNumber)
     }
+    
     
     /**
      Views Constraints Configuration
@@ -267,6 +269,8 @@ class LoginViewController: UIViewController, UIScrollViewDelegate {
         }
     }
 }
+
+
 
 
 

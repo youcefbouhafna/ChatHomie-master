@@ -45,8 +45,6 @@ class UserListViewController: UIViewController {
        
     }
     
-    
-    
     /// Setup Tabbar items
     func setupTabBarItem() {
         let usersListVC = UserListViewController()

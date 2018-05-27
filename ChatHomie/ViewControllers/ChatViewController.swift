@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 import FirebaseAuth
-class ChatViewController: UIViewController, UITextFieldDelegate {
+class ChatViewController: UIViewController, UITextFieldDelegate, SendingMessageDelegate {
     
     var ids = [String]()
     var conversation: ConversationsViewController?
@@ -37,7 +37,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         collectionView.backgroundColor = .white
         collectionView.register(ChatLogCollectionViewCell.self, forCellWithReuseIdentifier: "cellID")
         textInputContainerView = UINib(nibName: "MessageInputContainerView", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! MessageInputContainer
-        textInputContainerView.chatControllerDelegate = self
+        textInputContainerView.chatVC = self
+        textInputContainerView.delegate = self
         self.view.addSubview(textInputContainerView)
         self.view.addSubview(collectionView)
         hideKeyboard()
