@@ -276,7 +276,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ChatHomie/ViewControllers/Settings/SettingsViewController.swift"
-            timestampString = "549099914.191674"
+            timestampString = "549186421.480673"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "63"
@@ -308,7 +308,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ChatHomie/ViewControllers/Settings/SettingsViewController.swift"
-            timestampString = "549099914.1917599"
+            timestampString = "549186421.48081"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "60"
@@ -340,7 +340,7 @@
                   moduleName = "ChatHomie"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/youcefbouhafna/Desktop/Old%20Uhaul%20Macbook/ChatHomie-master/ChatHomie/Utils/FirebaseController.swift"
-                  timestampString = "549098947.658215"
+                  timestampString = "549186323.925284"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "0"
@@ -355,12 +355,12 @@
                   moduleName = "ChatHomie"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/youcefbouhafna/Desktop/Old%20Uhaul%20Macbook/ChatHomie-master/ChatHomie/Utils/FirebaseController.swift"
-                  timestampString = "549098947.659705"
+                  timestampString = "549186323.9277149"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "0"
                   endingLineNumber = "0"
-                  offsetFromSymbolStart = "12">
+                  offsetFromSymbolStart = "4">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -370,12 +370,12 @@
                   moduleName = "ChatHomie"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/youcefbouhafna/Desktop/Old%20Uhaul%20Macbook/ChatHomie-master/ChatHomie/Utils/FirebaseController.swift"
-                  timestampString = "549098947.6611789"
+                  timestampString = "549186323.930213"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "0"
                   endingLineNumber = "0"
-                  offsetFromSymbolStart = "12">
+                  offsetFromSymbolStart = "4">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -385,12 +385,12 @@
                   moduleName = "ChatHomie"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/youcefbouhafna/Desktop/Old%20Uhaul%20Macbook/ChatHomie-master/ChatHomie/Utils/FirebaseController.swift"
-                  timestampString = "549098947.662684"
+                  timestampString = "549186323.932768"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "15"
                   endingLineNumber = "15"
-                  offsetFromSymbolStart = "0">
+                  offsetFromSymbolStart = "4">
                </Location>
             </Locations>
          </BreakpointContent>
