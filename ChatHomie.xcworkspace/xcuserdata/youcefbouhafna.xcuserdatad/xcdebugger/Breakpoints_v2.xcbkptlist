@@ -324,7 +324,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ChatHomie/ViewControllers/Authentication+WalkThrough/LoginViewController.swift"
-            timestampString = "553465937.436341"
+            timestampString = "553467555.284503"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "174"
@@ -339,44 +339,12 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ChatHomie/ViewControllers/Authentication+WalkThrough/LoginViewController.swift"
-            timestampString = "553465937.4396009"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "258"
-            endingLineNumber = "258"
-            landmarkName = "getFBUserData()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "ChatHomie/ViewControllers/UserListViewController.swift"
-            timestampString = "553455550.391261"
+            timestampString = "553468492.703383"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
-            landmarkName = "viewDidLoad()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ChatHomie/ViewControllers/UserListViewController.swift"
-            timestampString = "553455550.391324"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "87"
-            endingLineNumber = "87"
+            startingLineNumber = "91"
+            endingLineNumber = "91"
             landmarkName = "observeUsers()"
             landmarkType = "7">
             <Locations>
@@ -388,11 +356,11 @@
                   moduleName = "ChatHomie"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/youcefbouhafna/Documents/GitHub/ChatHomie-master/ChatHomie/ViewControllers/UserListViewController.swift"
-                  timestampString = "553217520.206363"
+                  timestampString = "553468514.973103"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "87"
-                  endingLineNumber = "87"
+                  startingLineNumber = "91"
+                  endingLineNumber = "91"
                   offsetFromSymbolStart = "24">
                </Location>
                <Location
@@ -403,11 +371,11 @@
                   moduleName = "ChatHomie"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/youcefbouhafna/Documents/GitHub/ChatHomie-master/ChatHomie/ViewControllers/UserListViewController.swift"
-                  timestampString = "553217520.208479"
+                  timestampString = "553468514.974631"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "88"
-                  endingLineNumber = "88"
+                  startingLineNumber = "92"
+                  endingLineNumber = "92"
                   offsetFromSymbolStart = "28">
                </Location>
             </Locations>
@@ -420,12 +388,44 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ChatHomie/ViewControllers/UserListViewController.swift"
-            timestampString = "553455550.391378"
+            timestampString = "553468492.703729"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
+            startingLineNumber = "92"
+            endingLineNumber = "92"
             landmarkName = "observeUsers()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ChatHomie/ViewControllers/UserListViewController.swift"
+            timestampString = "553468492.703922"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "127"
+            endingLineNumber = "127"
+            landmarkName = "collectionView(_:cellForItemAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ChatHomie/ViewControllers/UserListViewController.swift"
+            timestampString = "553468492.704097"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "128"
+            endingLineNumber = "128"
+            landmarkName = "collectionView(_:cellForItemAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

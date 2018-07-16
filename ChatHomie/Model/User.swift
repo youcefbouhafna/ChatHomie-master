@@ -15,12 +15,14 @@ class User: NSObject {
     var email: String
     var id: String
     var profileImageUrl: String
+    var isOnline: Bool
     
-    init(userName: String, email: String, id: String, profileImgURL: String) {
+    init(userName: String, email: String, id: String, profileImgURL: String, isOnline: Bool) {
         self.userName = userName
         self.email = email
         self.id = id
         self.profileImageUrl = profileImgURL
+        self.isOnline = isOnline
     }
     
     init(withDictionary dictionary: [String: Any]) {
@@ -28,6 +30,7 @@ class User: NSObject {
         self.email = dictionary["email"] as? String ?? ""
         self.id = dictionary["id"] as? String ?? ""
         self.profileImageUrl = dictionary["profileImageUrl"] as? String ?? ""
+        self.isOnline = dictionary["isOnline"] as? Bool ?? false
     }
     
   

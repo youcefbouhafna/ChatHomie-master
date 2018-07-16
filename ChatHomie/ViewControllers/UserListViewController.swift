@@ -21,7 +21,7 @@ class UserListViewController: UIViewController {
     var collectionView: UICollectionView!
     var flowLayout = UICollectionViewFlowLayout()
     var messageId: Message?
-    
+    var timer: Timer?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Users"
@@ -36,6 +36,8 @@ class UserListViewController: UIViewController {
         collectionView.backgroundColor = .white
         collectionView.invalidateIntrinsicContentSize()
         observeUsers()
+        timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(observeUsers), userInfo: nil, repeats: true)
+
         
     }
     
@@ -67,7 +69,8 @@ class UserListViewController: UIViewController {
     
     
     ///observe all users and show them on the list
-    func observeUsers() {
+   @objc func observeUsers() {
+        self.usersList = []
         // reference firebase users database
         let ref =  Database.database().reference().child("Users").queryOrdered(byChild: "isOnline").queryEqual(toValue: true)
         // observe users database
@@ -76,6 +79,7 @@ class UserListViewController: UIViewController {
             if let jsonDictionary = snapshot.value as? [String: AnyObject] {
                 let user = User(withDictionary: jsonDictionary)
                 user.id = snapshot.key
+                user.isOnline = jsonDictionary["isOnline"] as? Bool ?? false
                 if user.id != Auth.auth().currentUser?.uid {
                     self.usersList.append(user)
                     DispatchQueue.main.async(execute: {
@@ -119,6 +123,10 @@ extension UserListViewController: UICollectionViewDataSource, UICollectionViewDe
         let user = usersList[indexPath.item]
         cell.cellUserName.text = user.userName
         cell.profileImage.loadImageUsingCacheWithUrlString(user.profileImageUrl)
+        if user.isOnline == true {
+            cell.profileImage.layer.borderColor = UIColor.green.cgColor
+            cell.profileImage.layer.borderWidth = 5
+        }
         
        
         return cell
