@@ -17,6 +17,10 @@ import FBSDKLoginKit
 import FacebookLogin
 import FOView
 
+
+// Facebook login manager instance
+let loginManager = LoginManager()
+
 class LoginViewController: UIViewController, UIScrollViewDelegate {
     let ref = Database.database().reference()
     var currentUserID: String?
@@ -163,7 +167,6 @@ class LoginViewController: UIViewController, UIScrollViewDelegate {
      */
     @objc func loginWithFacebook(sender: UIButton) {
         timer?.invalidate()
-        let loginManager = LoginManager()
         loginManager.logOut()
         loginManager.logIn(readPermissions: [.publicProfile], viewController: self) { loginResult in
             switch loginResult {
@@ -227,7 +230,7 @@ class LoginViewController: UIViewController, UIScrollViewDelegate {
                                     self.showUserList()
                                     self.currentUserID = user?.uid
                                     if let currentUserID = Auth.auth().currentUser?.uid {
-                                        FirebaseController.status(uid: currentUserID, isOnline: true)
+                                        FirebaseController.status(uid: currentUserID)
                                     }
                                         let view = MessageView.viewFromNib(layout: .messageView)
                                         view.configureTheme(.success)

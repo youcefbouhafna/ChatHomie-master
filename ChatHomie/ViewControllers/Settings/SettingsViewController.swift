@@ -52,8 +52,9 @@ class SettingsViewController: UIViewController {
         let logoutAction = UIAlertAction(title: "Logout", style: .default) { (action) in
             if let currentUserID = Auth.auth().currentUser?.uid {
                 DispatchQueue.main.async {
-                    FirebaseController.status(uid: currentUserID, isOnline: false)
+                    FirebaseController.status(uid: currentUserID)
                     try! Auth.auth().signOut()
+                    loginManager.logOut()
                     let loginViewController = LoginViewController()
                     self.present(loginViewController, animated: true, completion: nil)
                 }

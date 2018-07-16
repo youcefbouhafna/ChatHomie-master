@@ -324,11 +324,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ChatHomie/ViewControllers/Authentication+WalkThrough/LoginViewController.swift"
-            timestampString = "553455550.390559"
+            timestampString = "553465937.436341"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "171"
-            endingLineNumber = "171"
+            startingLineNumber = "174"
+            endingLineNumber = "174"
             landmarkName = "loginWithFacebook(sender:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -340,11 +340,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ChatHomie/ViewControllers/Authentication+WalkThrough/LoginViewController.swift"
-            timestampString = "553455550.390977"
+            timestampString = "553465937.4396009"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "255"
-            endingLineNumber = "255"
+            startingLineNumber = "258"
+            endingLineNumber = "258"
             landmarkName = "getFBUserData()"
             landmarkType = "7">
          </BreakpointContent>

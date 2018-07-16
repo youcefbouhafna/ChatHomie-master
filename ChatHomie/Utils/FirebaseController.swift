@@ -17,17 +17,26 @@ import FirebaseAuth
  */
 class FirebaseController {
     
-    static func status(uid: String = "", isOnline: Bool) {
+    static func status(uid: String = "") {
+        let connectedRef = Database.database().reference(withPath: ".info/connected")
         let ref = Database.database().reference().child("Users")
         let onlineStatus = ref.child(uid)
-        ref.observe(.value) { (snapshot) in
-            if snapshot.hasChild(uid) {
-                onlineStatus.updateChildValues(["isOnline": isOnline], withCompletionBlock: { (error, data) in
-                    if let error = error {
-                        assertionFailure(error.localizedDescription)
-                    }
-                })
+        connectedRef.observe(.value) { (snapshot) in
+            if let connected = snapshot.value as? Bool,
+                connected {
+                ref.observe(.value) { (snapshot) in
+                    guard snapshot.hasChild(uid) else {return}
+                        onlineStatus.updateChildValues(["isOnline": true], withCompletionBlock: { (error, data) in
+                            if let error = error {
+                                assertionFailure(error.localizedDescription)
+                            }
+                        })
+                    
+                }
+            } else {
+                onlineStatus.updateChildValues(["isOnline": false])
             }
-        }        
+        }
+        
     }
 }
