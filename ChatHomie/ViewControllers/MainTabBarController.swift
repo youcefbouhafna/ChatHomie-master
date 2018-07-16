@@ -28,8 +28,8 @@ class MainTabBarController: UITabBarController {
             let settingsVC = SettingsViewController()
             let viewControllerList = [ usersListVC, conversationsVC, settingsVC ]
             usersListVC.tabBarItem.image = #imageLiteral(resourceName: "usersIcon")
-            conversationsVC.tabBarItem.image = #imageLiteral(resourceName: "messageIcon")
-            settingsVC.tabBarItem.image = #imageLiteral(resourceName: "settingsIcon")
+            conversationsVC.tabBarItem.image = #imageLiteral(resourceName: "usersIcon")
+            settingsVC.tabBarItem.image = #imageLiteral(resourceName: "usersIcon")
             setViewControllers(viewControllerList, animated: true)
 
     }

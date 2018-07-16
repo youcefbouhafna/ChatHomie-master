@@ -38,6 +38,7 @@ enum SettingsItems {
     case biometrics
     case reviewApp
     case donate
+    case signOut
     
     var title: String? {
         switch self {
@@ -47,6 +48,7 @@ enum SettingsItems {
         case .biometrics: return "FaceID/TouchID"
         case .reviewApp: return "Help Us With A Review"
         case .donate: return "Help Us Keep The App Running"
+        case .signOut: return "Logout"
         }
     }
     
@@ -58,6 +60,7 @@ enum SettingsItems {
         case .biometrics: return #imageLiteral(resourceName: "settings-touchID")
         case .reviewApp: return #imageLiteral(resourceName: "settings-reviewapp")
         case .donate: return #imageLiteral(resourceName: "settings-donate")
+        case .signOut: return #imageLiteral(resourceName: "usersIcon")
         
         }
     }

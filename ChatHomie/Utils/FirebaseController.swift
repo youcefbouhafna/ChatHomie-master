@@ -12,17 +12,22 @@ import Firebase
 import FirebaseDatabase
 import FirebaseAuth
 
-class FirebaseAuthStatus {
-    static func status(uid: String, isConnected: Bool, success: @escaping(Bool) -> Void) {
-        let ref = Database.database().reference().child("Users").child(uid).child("isOnline")
-        ref.setValue(isConnected) { (error, _) in
-            if let error = error {
-                assertionFailure(error.localizedDescription)
-                success(false)
+/**
+ Class that manages Firebase helper functions
+ */
+class FirebaseController {
+    
+    static func status(uid: String = "", isOnline: Bool) {
+        let ref = Database.database().reference().child("Users")
+        let onlineStatus = ref.child(uid)
+        ref.observe(.value) { (snapshot) in
+            if snapshot.hasChild(uid) {
+                onlineStatus.updateChildValues(["isOnline": isOnline], withCompletionBlock: { (error, data) in
+                    if let error = error {
+                        assertionFailure(error.localizedDescription)
+                    }
+                })
             }
-            
-            success(true)
-        }
-        
+        }        
     }
 }

@@ -35,6 +35,6 @@
 	<key>GOOGLE_APP_ID</key>
 	<string>1:671093625351:ios:4dac71c7877b1ed5</string>
 	<key>DATABASE_URL</key>
-	<string>https://chathomie.firebaseio.com</string>
+	<string>https://chathomie.firebaseio.com/</string>
 </dict>
 </plist>

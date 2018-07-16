@@ -35,14 +35,13 @@ class UserListViewController: UIViewController {
         self.view.addSubview(collectionView)
         collectionView.backgroundColor = .white
         collectionView.invalidateIntrinsicContentSize()
-        AddNavigationItems()
         observeUsers()
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-       
+        AddNavigationItems()
     }
     
     /// Setup Tabbar items
@@ -60,30 +59,17 @@ class UserListViewController: UIViewController {
     
     ///Add Navigation bar button Items
     func AddNavigationItems() {
-        let logoutButton = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(showLogoutAlert))
-        self.navigationController?.navigationBar.topItem?.setRightBarButton(logoutButton, animated: true)
+//        let logoutButton = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(self.showLogoutAlert))
+//        logoutButton.tintColor = .blue
+//        self.navigationItem.setRightBarButton(logoutButton, animated: true)
     }
     
-    ///Show logout alert and logout if user clicks on logout button
-    @objc func showLogoutAlert() {
-        let alert = UIAlertController(title: "Logout", message: "Are You Sure You want To Logout?", preferredStyle: .actionSheet)
-        let logoutAction = UIAlertAction(title: "Logout", style: .default) { (action) in
-            try! Auth.auth().signOut()
-            let loginViewController = LoginViewController()
-            self.present(loginViewController, animated: true, completion: nil)
-        }
-        
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        alert.addAction(cancel)
-        alert.addAction(logoutAction)
-        present(alert, animated: true, completion: nil)
-        
-    }
+    
     
     ///observe all users and show them on the list
     func observeUsers() {
         // reference firebase users database
-        let ref =  Database.database().reference().child("Users")
+        let ref =  Database.database().reference().child("Users").queryOrdered(byChild: "isOnline").queryEqual(toValue: true)
         // observe users database
         ref.observe(.childAdded, with: { (snapshot) in
             // get the json object value as an array of  dictionaries
@@ -97,9 +83,13 @@ class UserListViewController: UIViewController {
                     })
                 }
             }
-            
-        }, withCancel: nil)
+        }, withCancel: { (error) in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 , execute: {
+                self.collectionView.reloadData()
+            })
+        })
     }
+    
     
     /**
      Shows the chatViewController
@@ -129,6 +119,7 @@ extension UserListViewController: UICollectionViewDataSource, UICollectionViewDe
         let user = usersList[indexPath.item]
         cell.cellUserName.text = user.userName
         cell.profileImage.loadImageUsingCacheWithUrlString(user.profileImageUrl)
+        
        
         return cell
         

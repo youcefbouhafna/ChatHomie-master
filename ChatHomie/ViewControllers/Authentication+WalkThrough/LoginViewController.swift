@@ -183,6 +183,7 @@ class LoginViewController: UIViewController, UIScrollViewDelegate {
         
         SVProgressHUD.show(withStatus: "Signing...")
         
+        // Try to sign in to Firebase
         Auth.auth().signIn(with: credential) { (user, error) in
             SVProgressHUD.dismiss()
             if error != nil {
@@ -193,7 +194,7 @@ class LoginViewController: UIViewController, UIScrollViewDelegate {
                 return
             }
             
-            ///////
+            //Get facebook profile data
             if((FBSDKAccessToken.current()) != nil) {
                 FBSDKGraphRequest(graphPath: "me", parameters: ["fields": "id, name, picture.type(large), email"]).start(completionHandler: { (connection, result, error) -> Void in
                     if (error == nil) {
@@ -206,19 +207,43 @@ class LoginViewController: UIViewController, UIScrollViewDelegate {
                         print("User Name is: \(userName)")
                         
                         if let imageURL = ((data["picture"] as? [String: Any])?["data"] as? [String: Any])?["url"] as? String {
-                            //Download image from imageURL
+                            // Download image from imageURL
                             self.profileImage.image = UIImage(data: try! Data(contentsOf: URL(string: imageURL)!))
-                            
+                            let values = ["userName": userName, "profileImageUrl": imageURL]
+                            let usersEndPoint = self.ref.child("Users").child(uid)
+                            usersEndPoint.updateChildValues(values, withCompletionBlock: { (error, ref) in
+                                if error != nil {
+                                    print(error as Any)
+                                    let view = MessageView.viewFromNib(layout: .messageView)
+                                    view.configureTheme(.error)
+                                    view.configureDropShadow()
+                                    view.configureContent(body: "There were a problem logging in. Please try again")
+                                    SwiftMessages.show(view: view)
+                                    return
+                                }
+                                
+                                // Do the UI Stuff on main thread
+                                DispatchQueue.main.async() {
+                                    self.showUserList()
+                                    self.currentUserID = user?.uid
+                                    if let currentUserID = Auth.auth().currentUser?.uid {
+                                        FirebaseController.status(uid: currentUserID, isOnline: true)
+                                    }
+                                        let view = MessageView.viewFromNib(layout: .messageView)
+                                        view.configureTheme(.success)
+                                        view.configureDropShadow()
+                                        view.configureContent(title: "Login Success", body: "")
+                                        SwiftMessages.show(view: view)
+                                    
+                                }
+                            })
                         }
-                        
-                        // Facebook users email:
-                        //                                let userEmail: String = data.object(forKey:"email") as! String
-                        //                                print("User Email is: \(userEmail)")
                         
                         // Facebook users ID:
                         let userID: String = data.object(forKey:"id") as! String
                         print("Users Facebook ID is: \(userID)")
                         
+                        // Grab facebook profile image and download it to Firebase Storage
                         let imageName = UUID().uuidString
                         let storageRef = Storage.storage().reference().child("profile_images").child(imageName)
                         
@@ -231,40 +256,12 @@ class LoginViewController: UIViewController, UIScrollViewDelegate {
                                     
                                     return
                                 }
-                                
-                                if let profileImageUrl = metaData?.downloadURL()?.absoluteString {
-                                    let values = ["userName": userName, "profileImageUrl": profileImageUrl]
-                                    let usersEndPoint = self.ref.child("Users").child(uid)
-                                    usersEndPoint.updateChildValues(values, withCompletionBlock: { (error, ref) in
-                                        if error != nil {
-                                            print(error as Any)
-                                            let view = MessageView.viewFromNib(layout: .messageView)
-                                            view.configureTheme(.error)
-                                            view.configureDropShadow()
-                                            view.configureContent(body: "There were a problem logging in. Please try again")
-                                            SwiftMessages.show(view: view)
-                                            return
-                                        }
-                                        
-                                        let view = MessageView.viewFromNib(layout: .messageView)
-                                        view.configureTheme(.success)
-                                        view.configureDropShadow()
-                                        view.configureContent(title: "Login Success", body: "")
-                                        SwiftMessages.show(view: view)
-                                        
-                                        let when = DispatchTime.now()
-                                        DispatchQueue.main.asyncAfter(deadline: when + 2) {
-                                            self.showUserList()
-                                            self.currentUserID = user?.uid
-                                        }
-                                    })
-                                }
-                            })
-                            
-                        }
+                            }
+                            )}
+                        
                     }
-                })
-            }
+                }
+                )}
             
         }
     }

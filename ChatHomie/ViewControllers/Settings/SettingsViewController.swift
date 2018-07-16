@@ -7,13 +7,16 @@
 //
 
 import UIKit
-
+import Foundation
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 /**
  Settings class to manage all app settings
  */
 class SettingsViewController: UIViewController {
     
-    var settingsList: [SettingsItems] = [.profileImages, .biometrics, .reviewApp, .notification, .privacyPolicy, .donate]
+    var settingsList: [SettingsItems] = [.profileImages, .biometrics, .reviewApp, .notification, .privacyPolicy, .donate, .signOut]
     var settingsTableView: UITableView!
     
     override func viewDidLoad() {
@@ -40,6 +43,27 @@ class SettingsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         settingsTableView.reloadData()
+        
+    }
+    
+    ///Show logout alert and logout if user clicks on logout button
+    @objc func showLogoutAlert() {
+        let alert = UIAlertController(title: "Logout", message: "Are You Sure You want To Logout?", preferredStyle: .actionSheet)
+        let logoutAction = UIAlertAction(title: "Logout", style: .default) { (action) in
+            if let currentUserID = Auth.auth().currentUser?.uid {
+                DispatchQueue.main.async {
+                    FirebaseController.status(uid: currentUserID, isOnline: false)
+                    try! Auth.auth().signOut()
+                    let loginViewController = LoginViewController()
+                    self.present(loginViewController, animated: true, completion: nil)
+                }
+            }
+        }
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(cancel)
+        alert.addAction(logoutAction)
+        present(alert, animated: true, completion: nil)
         
     }
     
@@ -71,6 +95,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         case .donate: Navigator.showDonateVC(onParentVC: self, withStyle: .stack, animated: true)
         case .privacyPolicy: Navigator.showPrivacyPolicy(onParentVC: self, withStyle: .stack, animated: true)
         case .profileImages: Navigator.showProfile(onParentVC: self, withStyle: .stack, animated: true)
+        case .signOut: showLogoutAlert()
         case .reviewApp: performSegue(withIdentifier: "reviewAppSegue", sender: nil)
         }
     }

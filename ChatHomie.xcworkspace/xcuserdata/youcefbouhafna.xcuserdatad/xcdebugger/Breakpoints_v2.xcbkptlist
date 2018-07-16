@@ -275,22 +275,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ChatHomie/ViewControllers/Settings/SettingsViewController.swift"
-            timestampString = "549186421.480673"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
-            landmarkName = "tableView(_:cellForRowAt:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "ChatHomie/Views/SettingsTableViewCell.swift"
             timestampString = "548355776.436046"
             startingColumnNumber = "9223372036854775807"
@@ -307,13 +291,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ChatHomie/ViewControllers/Settings/SettingsViewController.swift"
-            timestampString = "549186421.48081"
+            filePath = "ChatHomie/Utils/Extensions.swift"
+            timestampString = "552541649.070787"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
-            landmarkName = "tableView(_:cellForRowAt:)"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "loadImageUsingCacheWithUrlString(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -323,76 +307,126 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ChatHomie/Utils/FirebaseController.swift"
-            timestampString = "548869498.640559"
+            filePath = "ChatHomie/Utils/Extensions.swift"
+            timestampString = "552541649.071239"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14"
-            endingLineNumber = "14"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            startingLineNumber = "46"
+            endingLineNumber = "46"
+            landmarkName = "loadImageUsingCacheWithUrlString(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ChatHomie/ViewControllers/Authentication+WalkThrough/LoginViewController.swift"
+            timestampString = "553455550.390559"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
+            landmarkName = "loginWithFacebook(sender:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ChatHomie/ViewControllers/Authentication+WalkThrough/LoginViewController.swift"
+            timestampString = "553455550.390977"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "255"
+            endingLineNumber = "255"
+            landmarkName = "getFBUserData()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ChatHomie/ViewControllers/UserListViewController.swift"
+            timestampString = "553455550.391261"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ChatHomie/ViewControllers/UserListViewController.swift"
+            timestampString = "553455550.391324"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "87"
+            endingLineNumber = "87"
+            landmarkName = "observeUsers()"
+            landmarkType = "7">
             <Locations>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "ChatHomie.FirebaseAuthStatus.deinit"
+                  symbolName = "closure #2 (Swift.Error) -&gt; () in ChatHomie.UserListViewController.observeUsers() -&gt; ()"
                   moduleName = "ChatHomie"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/youcefbouhafna/Desktop/Old%20Uhaul%20Macbook/ChatHomie-master/ChatHomie/Utils/FirebaseController.swift"
-                  timestampString = "549186323.925284"
+                  urlString = "file:///Users/youcefbouhafna/Documents/GitHub/ChatHomie-master/ChatHomie/ViewControllers/UserListViewController.swift"
+                  timestampString = "553217520.206363"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0"
-                  offsetFromSymbolStart = "4">
+                  startingLineNumber = "87"
+                  endingLineNumber = "87"
+                  offsetFromSymbolStart = "24">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "ChatHomie.FirebaseAuthStatus.__deallocating_deinit"
+                  symbolName = "closure #1 () -&gt; () in closure #2 (Swift.Error) -&gt; () in ChatHomie.UserListViewController.observeUsers() -&gt; ()"
                   moduleName = "ChatHomie"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/youcefbouhafna/Desktop/Old%20Uhaul%20Macbook/ChatHomie-master/ChatHomie/Utils/FirebaseController.swift"
-                  timestampString = "549186323.9277149"
+                  urlString = "file:///Users/youcefbouhafna/Documents/GitHub/ChatHomie-master/ChatHomie/ViewControllers/UserListViewController.swift"
+                  timestampString = "553217520.208479"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0"
-                  offsetFromSymbolStart = "4">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ChatHomie.FirebaseAuthStatus.__allocating_init() -&gt; ChatHomie.FirebaseAuthStatus"
-                  moduleName = "ChatHomie"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/youcefbouhafna/Desktop/Old%20Uhaul%20Macbook/ChatHomie-master/ChatHomie/Utils/FirebaseController.swift"
-                  timestampString = "549186323.930213"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0"
-                  offsetFromSymbolStart = "4">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ChatHomie.FirebaseAuthStatus.init() -&gt; ChatHomie.FirebaseAuthStatus"
-                  moduleName = "ChatHomie"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/youcefbouhafna/Desktop/Old%20Uhaul%20Macbook/ChatHomie-master/ChatHomie/Utils/FirebaseController.swift"
-                  timestampString = "549186323.932768"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "15"
-                  endingLineNumber = "15"
-                  offsetFromSymbolStart = "4">
+                  startingLineNumber = "88"
+                  endingLineNumber = "88"
+                  offsetFromSymbolStart = "28">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ChatHomie/ViewControllers/UserListViewController.swift"
+            timestampString = "553455550.391378"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "88"
+            endingLineNumber = "88"
+            landmarkName = "observeUsers()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
