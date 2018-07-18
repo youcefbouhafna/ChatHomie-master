@@ -10,8 +10,10 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 import FirebaseAuth
+import ViewAnimator
 
 class UserListViewController: UIViewController {
+    var ref: DatabaseQuery!
     var users: LoginViewController?
     var chatVC =  ChatViewController()
     var conversationsController: ConversationsViewController?
@@ -22,6 +24,19 @@ class UserListViewController: UIViewController {
     var flowLayout = UICollectionViewFlowLayout()
     var messageId: Message?
     var timer: Timer?
+    var isAllUsers: Bool = false
+    
+    var usersSegmentedControl: UISegmentedControl = {
+        let segControl = UISegmentedControl()
+        segControl.selectedSegmentIndex = 0
+        segControl.backgroundColor = .red
+//        segControl.setTitle("Online", forSegmentAt: 0)
+//        segControl.setTitle("All", forSegmentAt: 1)
+        segControl.translatesAutoresizingMaskIntoConstraints = false
+        segControl.addTarget(self, action: #selector(ChangeSegmentedControlValue), for: .valueChanged)
+        return segControl
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Users"
@@ -36,8 +51,8 @@ class UserListViewController: UIViewController {
         collectionView.backgroundColor = .white
         collectionView.invalidateIntrinsicContentSize()
         observeUsers()
+        setSegmentedControlUI()
         timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(observeUsers), userInfo: nil, repeats: true)
-
         
     }
     
@@ -46,6 +61,18 @@ class UserListViewController: UIViewController {
         AddNavigationItems()
     }
     
+   @objc func ChangeSegmentedControlValue() {
+        showUsersList()
+    }
+    /// Set segmentedControl constraints
+    func setSegmentedControlUI() {
+        self.view.addSubview(usersSegmentedControl)
+        usersSegmentedControl.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100).isActive = true
+        usersSegmentedControl.bottomAnchor.constraint(equalTo: collectionView.topAnchor, constant: 0).isActive = true
+        usersSegmentedControl.widthAnchor.constraint(equalTo: self.view.widthAnchor, constant: 0).isActive = true
+        usersSegmentedControl.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+
     /// Setup Tabbar items
     func setupTabBarItem() {
         let usersListVC = UserListViewController()
@@ -59,6 +86,14 @@ class UserListViewController: UIViewController {
         
     }
     
+    func showUsersList() {
+        if usersSegmentedControl.selectedSegmentIndex == 0 {
+            isAllUsers = false
+        } else {
+            isAllUsers = true
+        }
+    }
+    
     ///Add Navigation bar button Items
     func AddNavigationItems() {
 //        let logoutButton = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(self.showLogoutAlert))
@@ -66,14 +101,25 @@ class UserListViewController: UIViewController {
 //        self.navigationItem.setRightBarButton(logoutButton, animated: true)
     }
     
+    /**
+     Function to call when selecting online users
+    */
     
+    /**
+     Function to call when selecting all users
+    */
     
     ///observe all users and show them on the list
-   @objc func observeUsers() {
+    @objc func observeUsers() {
         self.usersList = []
         // reference firebase users database
-        let ref =  Database.database().reference().child("Users").queryOrdered(byChild: "isOnline").queryEqual(toValue: true)
         // observe users database
+        if !isAllUsers {
+            ref = Database.database().reference().child("Users").queryOrdered(byChild: "isOnline").queryEqual(toValue: true)
+        } else {
+            ref = Database.database().reference().child("Users")
+        }
+        
         ref.observe(.childAdded, with: { (snapshot) in
             // get the json object value as an array of  dictionaries
             if let jsonDictionary = snapshot.value as? [String: AnyObject] {
@@ -106,7 +152,10 @@ class UserListViewController: UIViewController {
         
     }
     
+    
+    
 }
+
 
 //Mark: - UICollectionView DataSource and Delegates
 extension UserListViewController: UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout  {
@@ -124,8 +173,18 @@ extension UserListViewController: UICollectionViewDataSource, UICollectionViewDe
         cell.cellUserName.text = user.userName
         cell.profileImage.loadImageUsingCacheWithUrlString(user.profileImageUrl)
         if user.isOnline == true {
-            cell.profileImage.layer.borderColor = UIColor.green.cgColor
-            cell.profileImage.layer.borderWidth = 5
+            DispatchQueue.main.async {
+                cell.userConnectionStatus.textColor = .green
+                cell.userConnectionStatus.text = "Online"
+                collectionView.reloadData()
+            }
+            
+        } else {
+            DispatchQueue.main.async {
+                cell.userConnectionStatus.textColor = .red
+                cell.userConnectionStatus.text = "Away"
+                collectionView.reloadData()
+            }
         }
         
        
@@ -154,6 +213,7 @@ extension UserListViewController: UICollectionViewDataSource, UICollectionViewDe
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let cellSize = CGSize(width: view.frame.width, height: 100)
+    
         return cellSize
     }
 }
