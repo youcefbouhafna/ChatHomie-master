@@ -27,11 +27,10 @@ class UserListViewController: UIViewController {
     var isAllUsers: Bool = false
     
     var usersSegmentedControl: UISegmentedControl = {
-        let segControl = UISegmentedControl()
+        let items = ["Online", "All"]
+        let segControl = UISegmentedControl(items: items)
         segControl.selectedSegmentIndex = 0
-        segControl.backgroundColor = .red
-//        segControl.setTitle("Online", forSegmentAt: 0)
-//        segControl.setTitle("All", forSegmentAt: 1)
+        segControl.tintColor = .red
         segControl.translatesAutoresizingMaskIntoConstraints = false
         segControl.addTarget(self, action: #selector(ChangeSegmentedControlValue), for: .valueChanged)
         return segControl
@@ -40,25 +39,17 @@ class UserListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Users"
-        collectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: flowLayout)
-        collectionView?.register(UserCell.self, forCellWithReuseIdentifier: cellId)
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        flowLayout.minimumInteritemSpacing = 1
-        collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
-        collectionView?.alwaysBounceVertical = true
-        self.view.addSubview(collectionView)
-        collectionView.backgroundColor = .white
-        collectionView.invalidateIntrinsicContentSize()
-        observeUsers()
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         setSegmentedControlUI()
-        timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(observeUsers), userInfo: nil, repeats: true)
+        AddNavigationItems()
+        setCollectionViewUIConstraints()
+        //observeUsers()
+        timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(observeUsers), userInfo: nil, repeats: true)
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        AddNavigationItems()
     }
     
    @objc func ChangeSegmentedControlValue() {
@@ -67,12 +58,32 @@ class UserListViewController: UIViewController {
     /// Set segmentedControl constraints
     func setSegmentedControlUI() {
         self.view.addSubview(usersSegmentedControl)
-        usersSegmentedControl.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100).isActive = true
-        usersSegmentedControl.bottomAnchor.constraint(equalTo: collectionView.topAnchor, constant: 0).isActive = true
+        if #available(iOS 11.0, *) {
+            usersSegmentedControl.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
+        } else {
+            // Fallback on earlier versions
+        }
         usersSegmentedControl.widthAnchor.constraint(equalTo: self.view.widthAnchor, constant: 0).isActive = true
-        usersSegmentedControl.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        usersSegmentedControl.heightAnchor.constraint(equalToConstant: 100).isActive = true
     }
 
+    func setCollectionViewUIConstraints() {
+        self.view.addSubview(collectionView)
+        collectionView?.register(UserCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        flowLayout.minimumInteritemSpacing = 1
+        collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
+        collectionView?.alwaysBounceVertical = true
+        
+        collectionView.backgroundColor = .white
+        collectionView.invalidateIntrinsicContentSize()
+        collectionView.topAnchor.constraint(equalTo: self.usersSegmentedControl.bottomAnchor, constant: 0).isActive = true
+        collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0).isActive = true
+        collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0).isActive = true
+        collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0).isActive = true
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+    }
     /// Setup Tabbar items
     func setupTabBarItem() {
         let usersListVC = UserListViewController()
@@ -89,16 +100,18 @@ class UserListViewController: UIViewController {
     func showUsersList() {
         if usersSegmentedControl.selectedSegmentIndex == 0 {
             isAllUsers = false
+           
         } else {
             isAllUsers = true
+
         }
     }
     
     ///Add Navigation bar button Items
     func AddNavigationItems() {
-//        let logoutButton = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(self.showLogoutAlert))
-//        logoutButton.tintColor = .blue
-//        self.navigationItem.setRightBarButton(logoutButton, animated: true)
+        let logoutButton = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(SettingsViewController.showLogoutAlert))
+        logoutButton.tintColor = .blue
+        self.navigationItem.setRightBarButton(logoutButton, animated: true)
     }
     
     /**
