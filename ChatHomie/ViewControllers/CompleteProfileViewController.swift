@@ -16,54 +16,21 @@ class CompleteProfileViewController: UIViewController, UINavigationBarDelegate, 
     var profilePhotoHeight: NSLayoutConstraint?
     var statesPickerHeight: NSLayoutConstraint?
     var profile: LoginViewController?
+    var userID: String?
+    /**
+     View that holds the profile image
+ */
     
-    var EnterButton: UIButton = {
-        let button = UIButton()
-        button.isUserInteractionEnabled = true
-        button.layer.borderColor = UIColor.gray.cgColor
-        button.setTitle("Enter", for: .normal)
-        button.setTitleColor(.blue, for: .normal)
-        button.backgroundColor = .lightGray
-        button.layer.borderWidth = 2
-        button.layer.cornerRadius = 6
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
-        button.addTarget(self, action: #selector(enterButtonTapped), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    var statesPickerView: UIPickerView = {
-        let pickerView = UIPickerView()
-        pickerView.backgroundColor = .clear
-        pickerView.layer.cornerRadius = 6
-        pickerView.layer.borderWidth = 2
-        pickerView.layer.borderColor = UIColor.lightGray.cgColor
-        pickerView.translatesAutoresizingMaskIntoConstraints = false
-        return pickerView
+    var userName: UILabel = {
+        var nameLabel = UILabel()
+        return nameLabel
     }()
     
     var profileImage: UIImageView = {
         var sampleImage = UIImageView()
-        sampleImage.image = UIImage(named: "uploadPhoto")
+        sampleImage.image = #imageLiteral(resourceName: "sampleProfileImage")
         sampleImage.translatesAutoresizingMaskIntoConstraints = false
         return sampleImage
-    }()
-    
-    var uploadPhotoStackView: UIStackView = {
-        var stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.spacing = 2
-        stackView.distribution = .equalSpacing
-        return stackView
-    }()
-    
-    var pickerViewStackView: UIStackView = {
-        var stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.spacing = 0
-        stackView.distribution = .fill
-        return stackView
     }()
     
     var stackViewContainer: UIStackView = {
@@ -76,171 +43,37 @@ class CompleteProfileViewController: UIViewController, UINavigationBarDelegate, 
         return stackView
     }()
     
-    var choosePhotoLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Upload Photo"
-        label.textAlignment = .center
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.textColor = .blue
-        
-        return label
-    }()
-    
-    var selectState: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Select Your State"
-        label.textAlignment = .center
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.textColor = .blue
-        return label
-    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        statesPickerView.delegate = self
-        statesPickerView.dataSource = self
         setupViews()
-        loadStatesFromPlist()
         profileImage.tintColor = .red
-        chooseProfilePicGesture()
+        userName.text = userID
         
     }
     
     func setupViews() {
         view.addSubview(stackViewContainer)
-        
-        stackViewContainer.addArrangedSubview(uploadPhotoStackView)
-        stackViewContainer.addArrangedSubview(pickerViewStackView)
-
-        uploadPhotoStackView.addArrangedSubview(choosePhotoLabel)
-        uploadPhotoStackView.addArrangedSubview(profileImage)
-        pickerViewStackView.addArrangedSubview(selectState)
-        pickerViewStackView.addArrangedSubview(statesPickerView)
-        stackViewContainer.addArrangedSubview(EnterButton)
-        EnterButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
-        EnterButton.widthAnchor.constraint(equalTo: stackViewContainer.widthAnchor, constant: -8).isActive = true
+        stackViewContainer.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
+        stackViewContainer.widthAnchor.constraint(equalTo: view.widthAnchor, constant: 0).isActive = true
+        stackViewContainer.heightAnchor.constraint(equalTo: view.heightAnchor, constant: 0).isActive = true
         
         // profile image
-        profileImage.widthAnchor.constraint(equalToConstant: 57).isActive = true
-        profileImage.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        stackViewContainer.addArrangedSubview(profileImage)
+        profileImage.topAnchor.constraint(equalTo: stackViewContainer.topAnchor, constant: 0).isActive = true
+        profileImage.widthAnchor.constraint(equalTo: stackViewContainer.widthAnchor, constant: 0).isActive = true
+        profileImage.heightAnchor.constraint(equalToConstant: stackViewContainer.frame.height / 2 - 20).isActive = true
         
         // stackView
-        stackViewContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-        stackViewContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
-        stackViewContainer.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
-        stackViewContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100).isActive = true
+//        stackViewContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+//        stackViewContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+//        stackViewContainer.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+//        stackViewContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100).isActive = true
+      
         
-        // picker view
-        statesPickerView.heightAnchor.constraint(equalToConstant: 150).isActive = true
         
-        // labels
-        choosePhotoLabel.widthAnchor.constraint(equalTo: stackViewContainer.widthAnchor).isActive = true
-        choosePhotoLabel.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        selectState.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        selectState.widthAnchor.constraint(equalTo: choosePhotoLabel.widthAnchor).isActive = true
-        
-    }
-    
-    func chooseProfilePicGesture() {
-        let profileGestureTap = UITapGestureRecognizer(target: self, action: #selector(addPhotoTapped))
-        profileImage.addGestureRecognizer(profileGestureTap)
-    }
-    
-    /// image picker button tapped
-    func addPhotoTapped() {
-        /**
-         - in function
-         - click on picture icon to load imagePicker to choose picture from camera or gallery
-         - create picker for age, state
-         - create button called Enter.
-         
-         /// Enter button logic:
-         - onClick will segue users list
-         - Save Data to Firebase under the current user node
-         */
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
-        let pickImageAction = UIAlertAction(title: "Pick From Library", style: .default, handler: { action in
-            self.presentImagePicker(sourceType: .photoLibrary)})
-        let takeImageAction = UIAlertAction(title: "Take Photo", style: .default, handler: { action in
-            self.presentImagePicker(sourceType: .camera)})
-        
-        alertController.addAction(pickImageAction)
-        alertController.addAction(takeImageAction)
-    }
-    
-    /// Enter Button Action Function to call in button target
-    func enterButtonTapped() {
-        /**
-         - hit enter button
-         - ToDo: build the second pickerView column of age and third column of gender
-         - grab the selected photo by user and selected state and age and gender
-         - save the data under the user in firebase
-         - segue to list of users sorted by the same state as the user selected state from pickerView
-         
-         
-         */
-    }
-    /// load plist states array
-    func loadStatesFromPlist() {
-        var statesArray: [String] = []
-        if let url = Bundle.main.url(forResource:"StatesDataSource", withExtension: "plist") {
-            do {
-                let data = try Data(contentsOf:url)
-                let statesDictionary = try PropertyListSerialization.propertyList(from: data, options: [], format: nil) as! [String:Any]
-                // do something with the dictionary
-                for state in statesDictionary.values {
-                    statesArray.append(state as! String)
-                    self.StatesList = statesArray
-                    //TODO:- Find a way to sort the array so Arizona is on top 
-                }
-            } catch {
-                print(error)
-            }
-        }
-    }
-    
-    func presentImagePicker(sourceType: UIImagePickerControllerSourceType) {
-        guard UIImagePickerController.isSourceTypeAvailable(sourceType) else {
-            let message = MessageView.errorMessageView(withTitle: "Error", body: "Source Type not available")
-            SwiftMessages.show(view: message)
-            return
-        }
-        
-        guard let availableMedia = UIImagePickerController.availableMediaTypes(for: sourceType),
-            availableMedia.contains("public.image") else {
-                let message = MessageView.errorMessageView(withTitle: "No Available Images", body: "There are no images available from that source")
-                SwiftMessages.show(view: message)
-                return
-        }
-        
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        imagePickerController.sourceType = sourceType
-        present(imagePickerController, animated: true, completion: nil)
     }
 
     
     /// set the uplodPhoto icon to the profile image selected
 }
-extension CompleteProfileViewController: UIPickerViewDataSource, UIPickerViewDelegate {
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        //TODO: - build 3 components
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        //TODO: - load all 3 arrays
-        return self.StatesList.count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        //TODO:- return titles for all 3 columns data source 
-        return StatesList[row]
-    }
-    
-}
-
-

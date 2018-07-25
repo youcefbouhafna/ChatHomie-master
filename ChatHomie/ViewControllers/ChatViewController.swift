@@ -10,7 +10,8 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 import FirebaseAuth
-class ChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate {
+class ChatViewController: UIViewController, UITextFieldDelegate, SendingMessageDelegate {
+    
     var ids = [String]()
     var conversation: ConversationsViewController?
     var textInputContainerView =  MessageInputContainer()
@@ -23,7 +24,7 @@ class ChatViewController: UIViewController, UICollectionViewDataSource, UICollec
     var flowLayout = UICollectionViewFlowLayout()
     var collectionView:  UICollectionView!
     var containerViewBottomAnchor: NSLayoutConstraint?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height - 50), collectionViewLayout: flowLayout)
@@ -36,75 +37,38 @@ class ChatViewController: UIViewController, UICollectionViewDataSource, UICollec
         collectionView.backgroundColor = .white
         collectionView.register(ChatLogCollectionViewCell.self, forCellWithReuseIdentifier: "cellID")
         textInputContainerView = UINib(nibName: "MessageInputContainerView", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! MessageInputContainer
-        textInputContainerView.chatControllerDelegate = self
+        textInputContainerView.chatVC = self
+        textInputContainerView.delegate = self
         self.view.addSubview(textInputContainerView)
         self.view.addSubview(collectionView)
-        
+        hideKeyboard()
         textInputContainerView.translatesAutoresizingMaskIntoConstraints = false
         textInputContainerView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 0).isActive = true
         textInputContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
         textInputContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
         textInputContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
-
+        
         setupKeyboardObservers()
     }
     
-//        override var inputAccessoryView: UIView? {
-//            get {
-//                return textInputContainerView
-//            }
-//        }
-    
-    func bubbleLayout() {
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    /// hide keyboard on gesture tap
+    func hideKeyboard() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self,action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tap)
+    }
+    
+    /// dismiss keyboard
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return messages.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellID", for: indexPath) as! ChatLogCollectionViewCell
-        cell.chatController = self
-        let message = messages[indexPath.item]
-        cell.message = message
-        cell.textView.text = message.text
-        setupCell(message: message, cell: cell)
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let message = messages[indexPath.item]
-        var bubbleTextMessageHeight: CGFloat = 80
-        if let textMsg = message.text {
-            bubbleTextMessageHeight = estimateFrameForText(textMsg).height + 30
-        }
-        return CGSize(width: view.frame.width, height: bubbleTextMessageHeight)
-    }
-    
-    func setupCell(message: Message, cell: ChatLogCollectionViewCell) {
-        if let profileImageUrl = self.user?.profileImageUrl {
-            cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
-        }
-        
-        if message.sender == Auth.auth().currentUser?.uid {
-            cell.bubbleView.backgroundColor = ChatLogCollectionViewCell.blueColor
-            cell.textView.textColor = UIColor.white
-            cell.profileImageView.isHidden = true
-            
-            cell.bubbleViewRightAnchor?.isActive = true
-            cell.bubbleViewLeftAnchor?.isActive = false
-        } else {
-            //incoming gray
-            cell.bubbleView.backgroundColor = UIColor(r: 240, g: 240, b: 240)
-            cell.textView.textColor = UIColor.black
-            cell.profileImageView.isHidden = false
-            
-            cell.bubbleViewRightAnchor?.isActive = false
-            cell.bubbleViewLeftAnchor?.isActive = true
-        }
-    }
     
     
     func fetchConversationsForUser() {
@@ -136,7 +100,7 @@ class ChatViewController: UIViewController, UICollectionViewDataSource, UICollec
         }, withCancel: nil)
     }
     
-    func handleSendingMessage() {
+    @objc func handleSendingMessage() {
         let jsonDictionary = ["Text": textInputContainerView.inputTextField.text!]
         createMessageOnSendWith(jsonDictionary as [String : AnyObject])
     }
@@ -150,7 +114,7 @@ class ChatViewController: UIViewController, UICollectionViewDataSource, UICollec
     fileprivate func createMessageOnSendWith(_ newDictionary: [String: AnyObject]) {
         let ref = Database.database().reference().child("messages")
         let childRef = ref.childByAutoId()
-        let toId = user!.id!
+        let toId = user!.id
         let fromId = Auth.auth().currentUser!.uid
         let timestamp = Int(Date().timeIntervalSince1970)
         
@@ -178,34 +142,30 @@ class ChatViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
     }
     
-    fileprivate func estimateFrameForText(_ text: String) -> CGRect {
-        let size = CGSize(width: 200, height: 1000)
-        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-        return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 16)], context: nil)
-    }
+
     
+    /**
+     Handles keyboard mechanism
+     */
     func setupKeyboardObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
     }
     
-    func handleKeyboardDidShow() {
+    /// Handle Keyboard showing
+    @objc func handleKeyboardDidShow() {
         if messages.count > 0 {
             let indexPath = IndexPath(item: messages.count - 1, section: 0)
             collectionView?.scrollToItem(at: indexPath, at: .top, animated: true)
         }
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    func handleKeyboardWillShow(_ notification: Notification) {
+    ///Handles keyboard will show
+    @objc func handleKeyboardWillShow(_ notification: Notification) {
         let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue
         let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
         
@@ -215,7 +175,8 @@ class ChatViewController: UIViewController, UICollectionViewDataSource, UICollec
         })
     }
     
-    func handleKeyboardWillHide(_ notification: Notification) {
+    ///Handles keyboard hiding
+    @objc func handleKeyboardWillHide(_ notification: Notification) {
         let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
         
         containerViewBottomAnchor?.constant = 0
@@ -224,6 +185,73 @@ class ChatViewController: UIViewController, UICollectionViewDataSource, UICollec
         })
     }
     
+    ///Toggle keyboard
+//    func toggleKeyboard() {
+//        textInputContainerView.inputTextField.toggleKeyboardStatus(textInputContainerView.inputTextField)
+//    }
+   
+}
+
+extension ChatViewController:  UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return messages.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellID", for: indexPath) as! ChatLogCollectionViewCell
+        cell.chatController = self
+        let message = messages[indexPath.item]
+        cell.message = message
+        cell.textView.text = message.text
+        setupCell(message: message, cell: cell)
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let message = messages[indexPath.item]
+        var bubbleTextMessageHeight: CGFloat = 80
+        if let textMsg = message.text {
+            bubbleTextMessageHeight = estimateFrameForText(textMsg).height + 30
+        }
+        return CGSize(width: view.frame.width, height: bubbleTextMessageHeight)
+    }
+    
+    func setupCell(message: Message, cell: ChatLogCollectionViewCell) {
+        
+        
+        if message.sender == Auth.auth().currentUser?.uid {
+            cell.bubbleView.backgroundColor = ChatLogCollectionViewCell.blueColor
+            cell.textView.textColor = UIColor.white
+            cell.profileImageView.isHidden = false
+            cell.profileImageLeftAnchor?.isActive = false
+            cell.profileImageRightAnchor?.isActive = true
+            
+            cell.bubbleViewRightAnchor?.isActive = true
+            cell.bubbleViewLeftAnchor?.isActive = false
+            if let profileImageUrl = self.user?.profileImageUrl {
+                cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
+            }
+        } else {
+            //incoming gray
+            cell.bubbleView.backgroundColor = UIColor(r: 240, g: 240, b: 240)
+            cell.textView.textColor = UIColor.black
+            cell.profileImageView.isHidden = false
+            
+            cell.bubbleViewRightAnchor?.isActive = false
+            cell.bubbleViewLeftAnchor?.isActive = true
+            if let profileImageUrl = self.user?.profileImageUrl {
+                cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
+            }
+
+        }
+    }
+    
+    fileprivate func estimateFrameForText(_ text: String) -> CGRect {
+        let size = CGSize(width: 200, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        return NSString(string: text).boundingRect(with: size, options: options, attributes: [kCTFontAttributeName as NSAttributedStringKey: UIFont.systemFont(ofSize: 16)], context: nil)
+    }
 }
 
 /**

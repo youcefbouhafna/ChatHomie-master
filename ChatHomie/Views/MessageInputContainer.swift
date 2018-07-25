@@ -10,18 +10,18 @@ import UIKit
 
 class MessageInputContainer: UIView, UITextFieldDelegate {
     
-    weak var chatControllerDelegate: ChatViewController? {
-        didSet {
-            sendButton.addTarget(chatControllerDelegate, action: #selector(ChatViewController.handleSendingMessage), for: .touchUpInside)
-            //            AddImage.addGestureRecognizer(UITapGestureRecognizer(target: chatControllerDelegate, action: #selector(chatControllerDelegate.AddImage)))
-        }
-    }
+    var chatVC: ChatViewController?
+    weak var delegate: SendingMessageDelegate?
+    //
+    //            //            AddImage.addGestureRecognizer(UITapGestureRecognizer(target: chatControllerDelegate, action: #selector(chatControllerDelegate.AddImage)))
+    //        }
+    
     /**
      UI Components
      */
     lazy var inputTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Enter message..."
+        textField.placeholder = "Enter Message..."
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.delegate = self
         return textField
@@ -35,13 +35,32 @@ class MessageInputContainer: UIView, UITextFieldDelegate {
         return uploadImageView
     }()
     
-    let sendButton = UIButton(type: .system)
+    lazy var sendButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Send", for: UIControlState())
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isUserInteractionEnabled = true
+        button.setTitleColor(.blue, for: .normal)
+        button.addTarget(self, action: #selector(sendMessageOnButtonClick(sender:)), for: .touchUpInside)
+        return button
+    }()
     
     
+    @objc func sendMessageOnButtonClick(sender: UIButton) {
+        if (inputTextField.text?.isEmpty)! {
+            inputTextField.isEnabled = false
+            inputTextField.endEditing(true)
+        } else {
+            inputTextField.isEnabled = true
+            inputTextField.becomeFirstResponder()
+            inputTextField.placeholder = "Enter Message..."
+            delegate?.sendMessage(chatController: chatVC!)
+            
+        }
+    }
     override func awakeFromNib() {
         super.awakeFromNib()
         backgroundColor = .white
-        
         addSubview(uploadImageView)
         //x,y,w,h
         uploadImageView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -50,9 +69,7 @@ class MessageInputContainer: UIView, UITextFieldDelegate {
         uploadImageView.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         
-        sendButton.setTitle("Send", for: UIControlState())
-        sendButton.translatesAutoresizingMaskIntoConstraints = false
-        sendButton.isUserInteractionEnabled = true
+        
         self.addSubview(sendButton)
         //x,y,w,h
         sendButton.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -67,22 +84,33 @@ class MessageInputContainer: UIView, UITextFieldDelegate {
         self.inputTextField.rightAnchor.constraint(equalTo: sendButton.leftAnchor).isActive = true
         self.inputTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-//        let separatorLineView = UIView()
-//        separatorLineView.backgroundColor = UIColor(r: 220, g: 220, b: 220)
-//        separatorLineView.translatesAutoresizingMaskIntoConstraints = false
-//        addSubview(separatorLineView)
-        //x,y,w,h
-//        separatorLineView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-//        separatorLineView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-//        separatorLineView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
-//        separatorLineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
     }
-  
     
+    
+    ///UITextField delegate method
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        chatControllerDelegate?.handleSendingMessage()
+        if (textField.text?.isEmpty)! {
+            textField.isEnabled = false
+            textField.endEditing(true)
+        } else {
+            textField.isEnabled = true
+            textField.becomeFirstResponder()
+            textField.placeholder = "Enter Message..."
+            delegate?.sendMessage(chatController: chatVC!)
+            
+        }
+        
         return true
     }
     
- 
+}
+
+protocol SendingMessageDelegate: class {
+    func sendMessage(chatController: ChatViewController)
+}
+
+extension SendingMessageDelegate {
+    func sendMessage(chatController: ChatViewController) {
+        chatController.handleSendingMessage()
+    }
 }

@@ -11,13 +11,9 @@ import UIKit
 class UserCell: UICollectionViewCell {
     
     let profileImage: UIImageView = {
-        let image = UIImageView(frame: CGRect(x: 0, y: 0, width: 70, height: 70))
+        let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleAspectFill
-//        image.layer.cornerRadius = image.frame.size.height / 2
-//        image.layer.masksToBounds = true
-        //     profileImage.clipsToBounds = true
-
         return image
     }()
     
@@ -25,9 +21,28 @@ class UserCell: UICollectionViewCell {
         let name = UILabel()
         name.textColor = .black
         name.translatesAutoresizingMaskIntoConstraints = false
+        name.font = UIFont(name: "system", size: 20)
         return name
     }()
     
+    let userConnectionStatus: UILabel = {
+        let status = UILabel()
+        status.textColor = .black
+        status.translatesAutoresizingMaskIntoConstraints = false
+        status.font = UIFont.boldSystemFont(ofSize: 12)
+        status.text = "online"
+        return status
+    }()
+    
+    lazy var userStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.distribution = .fillEqually
+        stackView.alignment = .fill
+        stackView.axis = .vertical
+        stackView.spacing = 0
+        return stackView
+    }()
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -39,28 +54,34 @@ class UserCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         profileImage.layer.borderWidth = 1
-       // profileImage.layer.masksToBounds = false
         profileImage.layer.borderColor = UIColor.black.cgColor
         profileImage.layer.cornerRadius = profileImage.frame.height/2
         profileImage.clipsToBounds = true
+        profileImage.layer.masksToBounds = true
     }
    
     func setupUserCell() {
         addSubview(profileImage)
-        addSubview(cellUserName)
-       // contentView.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(userStackView)
+        bringSubview(toFront: userStackView)
+        userStackView.addArrangedSubview(cellUserName)
+        userStackView.addArrangedSubview(userConnectionStatus)
+        
         profileImage.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
-        profileImage.rightAnchor.constraint(equalTo: cellUserName.leftAnchor, constant: -20).isActive = true
         profileImage.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
         profileImage.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 8).isActive = true
         profileImage.widthAnchor.constraint(equalToConstant: 100).isActive = true
         profileImage.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
-      //  userName.leftAnchor.constraint(equalTo: profileImage.rightAnchor, constant: 8).isActive = true
-        cellUserName.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8).isActive = true
-        cellUserName.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
-        cellUserName.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 8).isActive = true
-        cellUserName.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        userStackView.translatesAutoresizingMaskIntoConstraints = false
+
+        userStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8).isActive = true
+        userStackView.centerYAnchor.constraint(equalTo: profileImage.centerYAnchor, constant: 0).isActive = true
+        userStackView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        userStackView.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 10).isActive = true
+
+        cellUserName.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        userConnectionStatus.heightAnchor.constraint(equalToConstant: 15).isActive = true
        
 
     }
